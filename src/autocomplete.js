@@ -11,7 +11,7 @@ angular.module('autocomplete', [] )
             scope: {}, // http://stackoverflow.com/questions/14050195/what-is-the-difference-between-and-in-directive-scope
             link: function($scope, element, attrs) {
                 var input = element.find('input');
-
+                var browseBtn = element.find('button'); //change this to an id selector if we have more buttons
 
                 //function declarations
 
@@ -47,10 +47,16 @@ angular.module('autocomplete', [] )
                 };
 
 
+                $scope.browse = function(event) {
+                    console.log("Browse!");
+                }
+
                 //Bind event listeners
 
 
                 input.on('keyup', $scope.keyPressed);
+                browseBtn.on('click', $scope.browse);
+
                 element.on("keyup", function (event) {
 
                     /*
