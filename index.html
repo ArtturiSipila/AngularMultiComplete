@@ -11,11 +11,14 @@
 </head>
 <body ng-app="testapp">
 <div ng-controller="TestController">
-Colors
+<h2>The list of colors</h2>
 
     <ul>
         <li ng-repeat="color in colors">{{color.color}}</li>
     </ul>
+
+    <h2>Autocomplete:</h2>
+    <autocomplete ng-model="selectedItem" datasource="colors"></autocomplete>
 </div>
 <script src="bower_components/angular/angular.min.js"></script>
 <script src="src/test_app.js"></script>

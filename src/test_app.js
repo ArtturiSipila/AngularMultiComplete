@@ -2,10 +2,16 @@
  * Created by Artturi Sipilä on 24.9.2014.
  */
 
-var test_app = angular.module('testapp', []); //"autocomplete"
+var test_app = angular.module('testapp', ["autocomplete"]);
+
+/*
+test_app.run(function($templateCache){
+    $templateCache.put("autocomplete.html", '<div></div>')
+});
+*/
 
 test_app.controller('TestController', ['$scope',
-        function TestController($scope, $http) {
+        function TestController($scope) {
 
            $scope.colors = [
                 {
