@@ -1,7 +1,7 @@
 <div class="autocomplete-container">
     <input ng-model="queryString" type="text" placeholder="{{placeholder}}" class="{{inputClass}}" onmouseup="this.select();" ng-focus="resetHideResults()" ng-blur="hideResults()"/>
     <button>Browse</button>
-    <div id="{{id}}_dropdown" class="dropdown" ng-if="showDropdown">
+    <div id="{{id}}_dropdown" class="dropdown" ng-if="showDropdown" style="border: 1px solid rgb(189, 181, 181); border-top: none; color: #414141; margin-right: 64px;">
         <div class="{{mynamespace}}_searching" ng-show="searching">Searching...</div>
         <div class="{{mynamespace}}_searching" ng-show="!searching && (!results || results.length == 0)">No results found
         </div>

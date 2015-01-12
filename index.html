@@ -2,26 +2,131 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title>...</title>
+    <title>Autocomplete</title>
+    <!--
     <meta name='viewport' content='width=device-width,initial-scale=1'>
-    <!-- some stylesheets here
-
-    <link rel="stylesheet" href="css/whatever.css"/>
     -->
+
+    <!--
+        <link rel="stylesheet" href="bower_components/foundation/css/foundation.css"/>
+    -->
+    <style type="text/css">
+        *, *:before, *:after {
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        .row:before, .row:after {
+            content: " ";
+            display: table;
+        }
+
+        html, body {
+            font-size: 100%;
+        }
+
+        body {
+            background: white;
+            color: #6a6a6a;
+            padding: 0;
+            margin: 0;
+            font-family: "proxima-nova-1", "proxima-nova-2", sans-serif;
+            font-weight: 300;
+            font-style: normal;
+            line-height: 1;
+            position: relative;
+            cursor: default;
+        }
+
+        body > header {
+            background-image: linear-gradient(to right, #428d9a, #428d9a 30%, #9fced6 30%) !important;
+        }
+
+        .alt-bg-color {
+            background-color: #7bbcc7;
+        }
+
+        .row {
+            width: 100%;
+            /*margin-left: auto;
+            margin-right: auto;
+            */
+            margin-top: 0;
+            margin-bottom: 0;
+            max-width: 62.5rem;
+        }
+
+        div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, form, p, blockquote, th, td {
+            margin: 0;
+            padding: 0;
+        }
+
+        body > header h1 .pagetitle {
+            color: #336d76;
+        }
+
+
+        .column, .columns {
+            position: relative;
+            padding-left: 0.9375rem;
+            padding-right: 0.9375rem;
+            float: left;
+        }
+
+        .medium-3 {
+            width: 25%;
+        }
+
+        body > header > div > div {
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+            /*            background-color: #9fced6; */
+        }
+    </style>
 </head>
 <body ng-app="testapp">
-<div ng-controller="TestController">
-<h2>The list of colors</h2>
+<header class="alt-bg-color">
+    <div class="row" style="height: 165px;">
 
-    <ul>
-        <li ng-repeat="color in colors">{{color.color}}</li>
-    </ul>
+        <div class="columns medium-3" style="height: 165px; text-align: center;">
+            <img src="assets/images/telescope_white.svg">
+        </div>
 
-    <h2>Autocomplete:</h2>
-    <autocomplete ng-model="selectedItem" datasource="colors"></autocomplete>
+        <div class="xsmall small-7 medium-9 columns" style="float: right; height: 165px;">
+            <h1><span class="pagetitle">Multiselect<br>
+                        Autocomplete</span><br>
+                <span class="nowrap" style="color: white;">for AngularJS  <span class="plusmark"></span></span>­<span
+                        class="text-expand" style="color: white;">(v1.3)</span></h1>
+        </div>
+        <!--
+        <div class="hide-for-small-only medium-5 columns" data-equalizer-watch>
+            <div class="icons">
+                <a href="https://www.dropbox.com/s/n3ieh2lco2dlxam/Chris%20Kobar%20resume.pdf" title="CV or résumé"><i class="icon-text" aria-hidden="true">CV</i></a>
+                <a href="mailto:chriskobar@mac.com" title="Email"><i class="ss-icon" aria-hidden="true">&#x2709;</i></a>
+                <a href="tel:1+7033959219" title="Phone"><i class="ss-icon" aria-hidden="true">&#x1F4DE;</i></a>
+            </div>
+        </div>
+        -->
+    </div>
+</header>
+
+<div class="row">
+    <div class="large-12 columns" ng-controller="TestController" style="text-align: center; margin-top: 15px;">
+        <h2>The list of colors</h2>
+
+        <ul style="list-style: none;">
+            <li ng-repeat="color in colors">{{color.color}}</li>
+        </ul>
+        <br/>
+        <br/>
+        <h2>Autocomplete:</h2><br/>
+        <autocomplete ng-model="selectedItem" datasource="colors"></autocomplete>
+    </div>
 </div>
-<script src="bower_components/angular/angular.min.js"></script>
-<script src="src/test_app.js"></script>
-<script src="src/autocomplete.js"></script>
+
+<script type="text/javascript" src="bower_components/angular/angular.min.js"></script>
+<script type="text/javascript" src="src/test_app.js"></script>
+<script type="text/javascript" src="src/autocomplete.js"></script>
 </body>
 </html>
