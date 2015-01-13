@@ -12,7 +12,7 @@ test_app.run(function($templateCache){
 
 test_app.controller('TestController', ['$scope',
         function TestController($scope) {
-
+            $scope.searchFieldsInData = ["color"];
            $scope.colors = [
                 {
                     color: "red",
