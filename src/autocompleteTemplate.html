@@ -27,7 +27,7 @@
 
 <div class="{{mynamespace}}-container">
     <input ng-model="queryString" type="text" placeholder="{{placeholder}}" class="{{inputClass}}" onmouseup="this.select();" ng-focus="resetHideResults()" ng-blur="hideResults()"/>
-    <button>Browse</button>
+    <button ng-click="browse()">Browse</button>
     <div class="{{mynamespace}}-dropdown" ng-if="showDropdown" >
         <div class="{{mynamespace}}-searching" ng-show="searching">Searching...</div>
         <div class="{{mynamespace}}-searching" ng-show="!searching && (!results || results.length == 0)">No results found

@@ -25,11 +25,12 @@ angular.module('autocomplete', [] )
                 "titleField": "@titlefield"  //TODO: rename to display field or resultField
             }, // http://stackoverflow.com/questions/14050195/what-is-the-difference-between-and-in-directive-scope
             link: function(scope, element, attrs) {
+                scope.displayLimit = 8;
                 scope.currentIndex = null;
                 scope.mynamespace = "angucomplete";
                 scope.matchClass = "highlight";
                 var input = element.find('input');
-                var browseBtn = element.find('button'); //change this to an id selector if we have more buttons
+                //var browseBtn = element.find('button'); //change this to an id selector if we have more buttons
                 //scope.localData = true;
                 scope.minLength = 1;
                 //scope.showDropdown = false;
@@ -40,7 +41,6 @@ angular.module('autocomplete', [] )
                     if (!(event.which == KEY_UP_ARROW || event.which == KEY_DOWN_ARROW || event.which == KEY_ENTER)) {
 
                         scope.showDropdown = true;
-
 
                         if (!scope.queryString || scope.queryString == "") {
                             console.log("Empty search string");
@@ -98,7 +98,7 @@ angular.module('autocomplete', [] )
 
                     if (searchQuery.length >= scope.minLength) {
                         if (scope.dataSource) {  //TODO if dataSource on tyyppiä array
-                            console.log("localData");
+
                             //var searchFields = scope.searchFields.split(",");
                             var searchFields = null;
                             if (typeof scope.searchFields !== 'undefined') {
@@ -146,7 +146,7 @@ angular.module('autocomplete', [] )
                 };
 
                 scope.processResults = function(responseData, str) {
-                    console.log("ProcessResults: ", responseData);
+                    console.log("ProcessResults: ", responseData, " str: ",str);
                     if (responseData && responseData.length > 0) {
                         scope.results = [];
 
@@ -179,10 +179,15 @@ angular.module('autocomplete', [] )
                             }
 
                             var text = titleCode.join(' ');
+
                             if (scope.matchClass) {
                                 var re = new RegExp(str, 'i');
+
                                 var strPart = text.match(re)[0];
-                                text = $sce.trustAsHtml(text.replace(re, '<span class="'+ scope.matchClass +'">'+ strPart +'</span>'));
+
+                                //console.log("text: ",strPart);
+                                text = $sce.trustAsHtml(text.replace(re, '<span class="' + scope.matchClass + '">' + strPart + '</span>'));
+                                //onsole.log("text: ",text);
                             }
 
                             scope.results[scope.results.length] = {
@@ -201,9 +206,27 @@ angular.module('autocomplete', [] )
                     console.log("RESULTS: ", scope.results);
                 };
 
-                scope.browse = function(event) {
+                scope.browse = function () {
                     console.log("Browse!");
-                };
+                    scope.showDropdown = true;
+
+                    if (scope.dataSource) {  //TODO if dataSource on tyyppiä array
+
+                        scope.searching = false;
+                        scope.processResults(  (scope.displayLimit < scope.dataSource.length) ? scope.dataSource.slice(0,scope.displayLimit) : scope.dataSource.slice(0,scope.dataSource.length)  , ".*");   // .* will match everything except new line and terminator
+
+                    }
+                    else { //TODO
+                        $http.get(scope.url + searchQuery, {}).
+                            success(function (responseData, status, headers, config) {
+                                scope.searching = false;
+                                scope.processResults(((scope.dataField) ? responseData[scope.dataField] : responseData ), " ");
+                            }).
+                            error(function (data, status, headers, config) {
+                                console.log("error");
+                            });
+                    }
+            };
 
 
                 scope.hideResults = function() {
@@ -240,7 +263,7 @@ angular.module('autocomplete', [] )
                 //Bind event listeners
 
                 input.on('keyup', scope.keyPressed);
-                browseBtn.on('click', scope.browse);
+                //browseBtn.on('click', scope.browse);
 
                 element.on("keyup", function (event) {
 
