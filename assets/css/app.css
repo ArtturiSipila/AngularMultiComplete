@@ -1,0 +1,116 @@
+.angucomplete-container {
+    position: relative;
+    max-width: 250px;
+
+}
+
+.angucomplete-input {
+    margin-bottom: 0;
+}
+
+.angucomplete-browse {
+    background-color: #369a47;
+    border-color: #2f8940;
+}
+
+.angucomplete-browse:hover, .angucomplete-browse:focus {
+    background-color: #2f8940;
+}
+
+.angucomplete-dropdown {
+    /*border-color: #ececec;*/
+
+
+
+    /*width: 250px;*7
+    padding: 6px;
+    cursor: pointer;
+    z-index: 9999;
+    /*position: absolute;*/
+
+    /*margin-top: -6px;*/
+    background-color: #ffffff;
+
+    border: 1px solid rgb(189, 181, 181);
+    border-top: none;
+    border-radius: 2px;
+    color: #414141;
+    /*
+    margin-right: 64px;
+    */
+
+}
+
+.angucomplete-searching {
+    color: #acacac;
+    font-size: 14px;
+}
+
+.angucomplete-description {
+    font-size: 14px;
+}
+
+.angucomplete-row {
+    padding: 5px;
+    color: #000000;
+    margin-bottom: 4px;
+
+}
+
+.angucomplete-selected-row, .angucomplete-row:hover {
+    background-color: lightblue;
+    color: #ffffff;
+}
+
+.angucomplete-image-holder {
+    padding-top: 2px;
+    float: left;
+    margin-right: 10px;
+    margin-left: 5px;
+}
+
+.angucomplete-image {
+    height: 34px;
+    width: 34px;
+    border-radius: 50%;
+    border-color: #ececec;
+    border-style: solid;
+    border-width: 1px;
+}
+
+.angucomplete-image-default {
+    /* Add your own default image here
+     background-image: url('/assets/default.png');
+    */
+    background-position: center;
+    background-size: contain;
+    height: 34px;
+    width: 34px;
+}
+
+.highlight {
+    /*color: #ff0000;*/
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: ProximaNova;
+    font-weight: normal;
+    src: url("../fonts/ProximaNova-Regular.otf") format("opentype");
+}
+
+.fullWidth {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: initial;
+}
+
+body > header .pagetitle {
+    font-family: "ProximaNova", sans-serif;
+    color: #307d3e;
+}
+
+h3 {
+    font-family: "ProximaNova", sans-serif;
+}
