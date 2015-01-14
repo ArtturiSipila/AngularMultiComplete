@@ -17,14 +17,20 @@ angular.module('autocomplete', [] )
             restrict: 'EA',
             templateUrl: 'src/autocompleteTemplate.html',
             scope: {
+                "id": "@id",
                 "placeholder": "@placeholder",
-                //"searchFields": "@searchfields"  //array of search fields
+                "dataField": "@datafield",  //typerää käyttää useaa päällekkäisen oloista kenttää, mieti voisiko niitä uudelleenkäyttää?   searchfield + datafield?
                 "selectedObject": "=selectedobject",
                 "dataSource": "=datasource",
+                "userPause": "@pause",
                 "searchFields": "=searchfields",  //array of search fields
-                "titleField": "@titlefield"  //TODO: rename to display field or resultField
+                "titleField": "@titlefield",  //TODO: rename to display field or resultField
+                "minLengthUser": "@minlength",
+                "clearOnSelection": '@'   //clear search query on selection event
+
             }, // http://stackoverflow.com/questions/14050195/what-is-the-difference-between-and-in-directive-scope
             link: function(scope, element, attrs) {
+                scope.searching = false;
                 scope.displayLimit = 8;
                 scope.currentIndex = null;
                 scope.mynamespace = "angucomplete";
@@ -32,64 +38,67 @@ angular.module('autocomplete', [] )
                 var input = element.find('input');
                 //var browseBtn = element.find('button'); //change this to an id selector if we have more buttons
                 //scope.localData = true;
-                scope.minLength = 1;
+                scope.pause = 500;
+                scope.minLength = 2;  //minlength internal
                 //scope.showDropdown = false;
 
                 //function declarations
 
+
+                //override the default min length value with user given values
+                if (scope.minLengthUser && scope.minLengthUser != "") {
+                    scope.minLength = scope.minLengthUser;
+                }
+
+                //override the pause value with user given value
+                if (scope.userPause) {
+                    scope.pause = scope.userPause;
+                }
+
                 scope.keyPressed = function(event) {
                     if (!(event.which == KEY_UP_ARROW || event.which == KEY_DOWN_ARROW || event.which == KEY_ENTER)) {
 
-                        scope.showDropdown = true;
+                        //scope.showDropdown = true;
 
                         if (!scope.queryString || scope.queryString == "") {
-                            console.log("Empty search string");
                             scope.showDropdown = false;
                             scope.lastSearchTerm = null;
 
                         }
                         else if (isNewSearchNeeded(scope.queryString, scope.lastSearchTerm)) { //TODO: rename to : found in cache etc.
-                            console.log("Search needed");
                             scope.lastSearchTerm = scope.queryString;
                             scope.showDropdown = true;
                             scope.currentIndex = -1;
                             scope.results = [];
 
-                            /*
+                            //cancel the curren timer if we keep typing?
                             if (scope.searchTimer) {
                                 $timeout.cancel(scope.searchTimer);
                             }
-                            */
 
                             scope.searching = true;
 
-                            /*
+                            if (scope.searchTimer) {
+                                $timeout.cancel(scope.searchTimer);
+                            }
+
+                            scope.searching = true;
+
                             scope.searchTimer = $timeout(function() {
-                                scope.searchTimerComplete(scope.queryString);
+                                scope.search(scope.queryString);
                             }, scope.pause);
-                            */
-
-                            scope.search(scope.queryString);
                         }
-
                     }
                     else {
-                        console.log("Prevent default");
                         event.preventDefault();
                     }
                 };
 
 
                 //from angucomplete
-                /*
-                isNewSearchNeeded = function(newTerm, oldTerm) {
-                    return newTerm.length >= scope.minLength && newTerm != oldTerm
-                }
-                */
 
-                //TODO
-                var isNewSearchNeeded = function(a, b) {
-                    return true;
+                var isNewSearchNeeded = function(newTerm, oldTerm) {
+                    return newTerm.length >= scope.minLength && newTerm != oldTerm
                 };
 
 
@@ -110,10 +119,6 @@ angular.module('autocomplete', [] )
 
                             var matches = [];
 
-                            //console.log("searchfields: "+ searchFields);
-                            //console.log("searchfields: "+ searchFields.length);
-                            //console.log("localData: "+ scope.dataSource);
-                            //console.log("localData[0]: "+ scope.dataSource[0]);
 
                             for (var i = 0; i < scope.dataSource.length; i++) {
                                 var match = false;
@@ -123,7 +128,6 @@ angular.module('autocomplete', [] )
                                 }
 
                                 if (match) {
-                                    console.log("match");
                                     matches[matches.length] = scope.dataSource[i];
                                 }
                             }
@@ -138,7 +142,8 @@ angular.module('autocomplete', [] )
                                     scope.processResults(((scope.dataField) ? responseData[scope.dataField] : responseData ), searchQuery);
                                 }).
                                 error(function(data, status, headers, config) {
-                                    console.log("error");
+
+                                    console.error("http error");
                                 });
                         }
                     }
@@ -146,7 +151,6 @@ angular.module('autocomplete', [] )
                 };
 
                 scope.processResults = function(responseData, str) {
-                    console.log("ProcessResults: ", responseData, " str: ",str);
                     if (responseData && responseData.length > 0) {
                         scope.results = [];
 
@@ -182,12 +186,8 @@ angular.module('autocomplete', [] )
 
                             if (scope.matchClass) {
                                 var re = new RegExp(str, 'i');
-
                                 var strPart = text.match(re)[0];
-
-                                //console.log("text: ",strPart);
                                 text = $sce.trustAsHtml(text.replace(re, '<span class="' + scope.matchClass + '">' + strPart + '</span>'));
-                                //onsole.log("text: ",text);
                             }
 
                             scope.results[scope.results.length] = {
@@ -203,11 +203,10 @@ angular.module('autocomplete', [] )
                         scope.results = [];
                     }
 
-                    console.log("RESULTS: ", scope.results);
+                    //console.log("RESULTS: ", scope.results);
                 };
 
                 scope.browse = function () {
-                    console.log("Browse!");
                     scope.showDropdown = true;
 
                     if (scope.dataSource) {  //TODO if dataSource on tyyppiä array
@@ -223,7 +222,7 @@ angular.module('autocomplete', [] )
                                 scope.processResults(((scope.dataField) ? responseData[scope.dataField] : responseData ), " ");
                             }).
                             error(function (data, status, headers, config) {
-                                console.log("error");
+                                console.error("http error");
                             });
                     }
             };
@@ -246,18 +245,22 @@ angular.module('autocomplete', [] )
                 };
 
                 scope.selectResult = function(result) {
-                    console.log("selectResult: ",result);
-                    console.log("selectResult.title: ",result.title.$$unwrapTrustedValue());
+                    //console.log("selectResult: ",result);
+                    //console.log("selectResult.title: ",result.title.$$unwrapTrustedValue());
                     //console.log("selectResult.title: ",result.originalObject.title);
                     if (scope.matchClass) {
                         result.title = result.title.$$unwrapTrustedValue().toString().replace(/(<([^>]+)>)/ig, '');
                     }
-                    console.log("unwrapped title: ", result.title);
+                    //console.log("unwrapped title: ", result.title);
                     scope.queryString = scope.lastSearchTerm = result.title;
                     scope.selectedObject = result;
                     scope.showDropdown = false;
                     scope.results = [];
-                    //$scope.$apply();
+
+                    if (scope.clearOnSelection) {
+                        console.log("Clear on selection true");
+                        scope.queryString = null;
+                    }
                 };
 
                 //Bind event listeners

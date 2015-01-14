@@ -48,8 +48,11 @@
         </ul>
         <br/>
         <br/>
-        <h3>Autocomplete:</h3>
-        <autocomplete ng-model="selectedItem" selectedobject="selectedItem" dataSource="colors" searchFields="searchFieldsInData" titlefield="color"></autocomplete>
+        <h3>Basic autocomplete:</h3>
+        <autocomplete id="autocomplete" ng-model="selectedItem" selectedobject="selectedItem" dataSource="colors" searchFields="['color']" titlefield="color" placeholder="Search colors" ></autocomplete>
+
+        <h3>Clear search field on selection</h3>
+        <autocomplete id="autocomplete" ng-model="selectedItem" selectedobject="selectedItem" dataSource="colors" searchFields="['color']" titlefield="color" placeholder="Search colors" clear-on-selection="true" ></autocomplete>
     </div>
 </div>
 
