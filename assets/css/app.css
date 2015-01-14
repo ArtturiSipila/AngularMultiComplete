@@ -1,23 +1,26 @@
-.angucomplete-container {
+.autocomplete-container {
     position: relative;
     max-width: 250px;
 
 }
+.result {
+    max-width: 250px;
+}
 
-.angucomplete-input {
+.autocomplete-input {
     margin-bottom: 0;
 }
 
-.angucomplete-browse {
+.autocomplete-browse {
     background-color: #369a47;
     border-color: #2f8940;
 }
 
-.angucomplete-browse:hover, .angucomplete-browse:focus {
+.autocomplete-browse:hover, .autocomplete-browse:focus {
     background-color: #2f8940;
 }
 
-.angucomplete-dropdown {
+.autocomplete-dropdown {
     /*border-color: #ececec;*/
 
 
@@ -41,35 +44,35 @@
 
 }
 
-.angucomplete-searching {
+.autocomplete-searching {
     color: #acacac;
     font-size: 14px;
 }
 
-.angucomplete-description {
+.autocomplete-description {
     font-size: 14px;
 }
 
-.angucomplete-row {
+.autocomplete-row {
     padding: 5px;
     color: #000000;
     margin-bottom: 4px;
 
 }
 
-.angucomplete-selected-row, .angucomplete-row:hover {
+.selected-row, .autocomplete-row:hover {
     background-color: lightblue;
     color: #ffffff;
 }
 
-.angucomplete-image-holder {
+.autocomplete-image-holder {
     padding-top: 2px;
     float: left;
     margin-right: 10px;
     margin-left: 5px;
 }
 
-.angucomplete-image {
+.autocomplete-image {
     height: 34px;
     width: 34px;
     border-radius: 50%;
@@ -78,7 +81,7 @@
     border-width: 1px;
 }
 
-.angucomplete-image-default {
+.autocomplete-image-default {
     /* Add your own default image here
      background-image: url('/assets/default.png');
     */

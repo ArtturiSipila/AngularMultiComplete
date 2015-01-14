@@ -26,14 +26,15 @@ angular.module('autocomplete', [] )
                 "searchFields": "=searchfields",  //array of search fields
                 "titleField": "@titlefield",  //TODO: rename to display field or resultField
                 "minLengthUser": "@minlength",
-                "clearOnSelection": '@'   //clear search query on selection event
+                "clearOnSelection": '@',   //clear search query on selection event
+                "multiselect": '@'   //enable multiselection
 
             }, // http://stackoverflow.com/questions/14050195/what-is-the-difference-between-and-in-directive-scope
             link: function(scope, element, attrs) {
                 scope.searching = false;
                 scope.displayLimit = 8;
                 scope.currentIndex = null;
-                scope.mynamespace = "angucomplete";
+                scope.mynamespace = "autocomplete";
                 scope.matchClass = "highlight";
                 var input = element.find('input');
                 //var browseBtn = element.find('button'); //change this to an id selector if we have more buttons
@@ -270,13 +271,15 @@ angular.module('autocomplete', [] )
 
                 element.on("keyup", function (event) {
 
-
+                        //console.log("Key up: ", event.which);
                     if(event.which === KEY_DOWN_ARROW) {
+
                         if (scope.results && (scope.currentIndex + 1) < scope.results.length) {
                             scope.currentIndex ++;
                             scope.$apply();
                             event.preventDefault;
                             event.stopPropagation();
+
                         }
 
                         scope.$apply();

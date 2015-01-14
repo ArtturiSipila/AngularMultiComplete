@@ -50,9 +50,22 @@
         <br/>
         <h3>Basic autocomplete:</h3>
         <autocomplete id="autocomplete" ng-model="selectedItem" selectedobject="selectedItem" dataSource="colors" searchFields="['color']" titlefield="color" placeholder="Search colors" ></autocomplete>
+        <div class="result">
+            <div ng-show="selectedItem" ng-style="{ 'background': selectedItem.originalObject.value}">
+                You selected <span class="bold">{{selectedItem.originalObject.color}}</span>
+            </div>
+        </div>
+        <BR/>
 
         <h3>Clear search field on selection</h3>
-        <autocomplete id="autocomplete" ng-model="selectedItem" selectedobject="selectedItem" dataSource="colors" searchFields="['color']" titlefield="color" placeholder="Search colors" clear-on-selection="true" ></autocomplete>
+        <autocomplete id="autocomplete" ng-model="selectedItem" selectedobject="selectedItem2" dataSource="colors" searchFields="['color']" titlefield="color" placeholder="Search colors" clear-on-selection="true" ></autocomplete>
+        <div class="result">
+            <div ng-show="selectedItem2" ng-style="{ 'background': selectedItem2.originalObject.value}">
+                You selected <span class="bold">{{selectedItem2.originalObject.color}}</span>
+            </div>
+        </div>
+        <BR/>
+
     </div>
 </div>
 
