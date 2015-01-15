@@ -1,7 +1,3 @@
-/**
- * Created by Artturi Sipilä on 24.9.2014.
- */
-
 var test_app = angular.module('testapp', ["autocomplete"]);
 
 /*
@@ -44,5 +40,17 @@ test_app.controller('TestController', ['$scope',
                 }
             ];
 
+            //example 3:
+            $scope.selectedItemFromCallBack = null;
+            $scope.onAutoCompleteSelection = function(value) {
+                console.log("onSelection: ",value);
+                 $scope.selectedItemFromCallBack = value;
+            };
+
+            //example 4:
+            $scope.example4Callback = function(value) {
+                console.log("Example 4 callback got this value: ",value);
+                alert("Got this value: "+value.title);
+            };
         }
     ]);

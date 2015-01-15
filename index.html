@@ -48,8 +48,12 @@
         </ul>
         <br/>
         <br/>
-        <h3>Basic autocomplete:</h3>
+        <h3>1. Basic autocomplete:</h3>
+        <!--
         <autocomplete id="autocomplete" ng-model="selectedItem" selectedobject="selectedItem" dataSource="colors" searchFields="['color']" titlefield="color" placeholder="Search colors" ></autocomplete>
+        -->
+        <!--ng-model="selectedItem"-->
+        <autocomplete id="autocomplete"  selectedobject="selectedItem" dataSource="colors" searchFields="['color']" titlefield="color" placeholder="Search colors" ></autocomplete>
         <div class="result">
             <div ng-show="selectedItem" ng-style="{ 'background': selectedItem.originalObject.value}">
                 You selected <span class="bold">{{selectedItem.originalObject.color}}</span>
@@ -57,11 +61,30 @@
         </div>
         <BR/>
 
-        <h3>Clear search field on selection</h3>
+
+        <h3>2. Clear search field on selection</h3>
         <autocomplete id="autocomplete" ng-model="selectedItem" selectedobject="selectedItem2" dataSource="colors" searchFields="['color']" titlefield="color" placeholder="Search colors" clear-on-selection="true" ></autocomplete>
         <div class="result">
             <div ng-show="selectedItem2" ng-style="{ 'background': selectedItem2.originalObject.value}">
                 You selected <span class="bold">{{selectedItem2.originalObject.color}}</span>
+            </div>
+        </div>
+        <BR/>
+
+        <h3>3. Model as a callback function</h3>
+        <autocomplete id="autocomplete" ng-model="selectedItem" selectedobject="onAutoCompleteSelection" dataSource="colors" searchFields="['color']" titlefield="color" placeholder="Search colors" clear-on-selection="true" ></autocomplete>
+        <div class="result">
+            <div ng-show="selectedItemFromCallBack" ng-style="{ 'background': selectedItemFromCallBack.originalObject.value}">
+                You selected <span class="bold">{{selectedItemFromCallBack.originalObject.color}}</span>
+            </div>
+        </div>
+        <BR/>
+
+        <h3>4. Separate callback function</h3>
+        <autocomplete id="autocomplete" ng-model="selectedItem" selectedobject="selectedItem4" on-selection="example4Callback(item)" dataSource="colors" searchFields="['color']" titlefield="color" placeholder="Search colors" clear-on-selection="true" ></autocomplete>
+        <div class="result">
+            <div ng-show="selectedItemFromCallBack" ng-style="{ 'background': selectedItem4.originalObject.value}">
+                You selected <span class="bold">{{selectedItem4.originalObject.color}}</span>
             </div>
         </div>
         <BR/>

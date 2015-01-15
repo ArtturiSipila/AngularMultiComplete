@@ -16,6 +16,7 @@ angular.module('autocomplete', [] )
         return {
             restrict: 'EA',
             templateUrl: 'src/autocompleteTemplate.html',
+            //require:"?ngModel",  //with ? we don't crash if ngModel is missing, this may or may not be a good thing
             scope: {
                 "id": "@id",
                 "placeholder": "@placeholder",
@@ -27,10 +28,18 @@ angular.module('autocomplete', [] )
                 "titleField": "@titlefield",  //TODO: rename to display field or resultField
                 "minLengthUser": "@minlength",
                 "clearOnSelection": '@',   //clear search query on selection event
-                "multiselect": '@'   //enable multiselection
+                "multiselect": '@',   //enable multiselection
+                "onSelection":"&" //  The “&” operator allows you to invoke or evaluate an expression on the parent scope of whatever the directive is inside of.
 
             }, // http://stackoverflow.com/questions/14050195/what-is-the-difference-between-and-in-directive-scope
-            link: function(scope, element, attrs) {
+            link: function(scope, element, attrs, ngModel) {
+                //if (!ngModel) return; // do nothing if no ng-model
+
+                // Specify how UI should be updated
+                //ngModel.$render = function() {
+                 //   element.html($sce.getTrustedHtml(ngModel.$viewValue || ''));
+                //};
+
                 scope.searching = false;
                 scope.displayLimit = 8;
                 scope.currentIndex = null;
@@ -43,8 +52,21 @@ angular.module('autocomplete', [] )
                 scope.minLength = 2;  //minlength internal
                 //scope.showDropdown = false;
 
-                //function declarations
+                setSelectedObject(null);
 
+                /*
+                scope.$watch(function (){
+                    return ngModel.$modelValue;
+                }, function (newVal, oldVal) {
+                    console.log('!!!' + newVal+' '+oldVal);
+                    scope.selectedObject = newVal;
+                });
+                */
+
+                //ngModel.$setViewValue
+                //ngModel.$viewValue
+
+                //function declarations
 
                 //override the default min length value with user given values
                 if (scope.minLengthUser && scope.minLengthUser != "") {
@@ -95,12 +117,30 @@ angular.module('autocomplete', [] )
                     }
                 };
 
-
                 //from angucomplete
 
                 var isNewSearchNeeded = function(newTerm, oldTerm) {
                     return newTerm.length >= scope.minLength && newTerm != oldTerm
                 };
+
+                /* Setter for selected object, it may be a function or a value */
+                function setSelectedObject(value) {
+                    if (typeof scope.selectedObject === 'function') {
+                        scope.selectedObject(value);
+                    }
+                    else {
+                        scope.selectedObject = value;
+                    }
+
+                    /*
+                    if (value) {
+                        handleRequired(true);
+                    }
+                    else {
+                        handleRequired(false);
+                    }
+                    */
+                }
 
 
                 scope.search = function(searchQuery) {
@@ -185,16 +225,19 @@ angular.module('autocomplete', [] )
 
                             var text = titleCode.join(' ');
 
+
                             if (scope.matchClass) {
                                 var re = new RegExp(str, 'i');
                                 var strPart = text.match(re)[0];
                                 text = $sce.trustAsHtml(text.replace(re, '<span class="' + scope.matchClass + '">' + strPart + '</span>'));
+                                //text = text.replace(re, '<span class="' + scope.matchClass + '">' + strPart + '</span>');
                             }
+
 
                             scope.results[scope.results.length] = {
                                 title: text,
-                                description: description,
-                                image: image,
+                                //description: description,
+                                //image: image,
                                 originalObject: responseData[i]
                                 };
                         }
@@ -204,7 +247,7 @@ angular.module('autocomplete', [] )
                         scope.results = [];
                     }
 
-                    //console.log("RESULTS: ", scope.results);
+                    console.log("RESULTS: ", scope.results);
                 };
 
                 scope.browse = function () {
@@ -238,7 +281,7 @@ angular.module('autocomplete', [] )
                 scope.resetHideResults = function() {
                     if(scope.hideTimer) {
                         $timeout.cancel(scope.hideTimer);
-                    };
+                    }
                 };
 
                 scope.hoverRow = function(index) {
@@ -246,7 +289,7 @@ angular.module('autocomplete', [] )
                 };
 
                 scope.selectResult = function(result) {
-                    //console.log("selectResult: ",result);
+                    console.log("selectResult: ",result);
                     //console.log("selectResult.title: ",result.title.$$unwrapTrustedValue());
                     //console.log("selectResult.title: ",result.originalObject.title);
                     if (scope.matchClass) {
@@ -254,7 +297,13 @@ angular.module('autocomplete', [] )
                     }
                     //console.log("unwrapped title: ", result.title);
                     scope.queryString = scope.lastSearchTerm = result.title;
-                    scope.selectedObject = result;
+                    setSelectedObject(result);
+
+                    scope.onSelection({item: result});
+
+                    //console.log("Set view value to: ",result.originalObject.$$unwrapTrustedValue());
+                    //ngModel.$setViewValue( result.originalObject.$$unwrapTrustedValue() );
+
                     scope.showDropdown = false;
                     scope.results = [];
 
@@ -313,7 +362,7 @@ angular.module('autocomplete', [] )
                         scope.$apply();
                     }
                     else if (event.which == KEY_BACKSPACE) {
-                        scope.selectedObject = null;
+                        setSelectedObject(null);
                         scope.$apply();
                     }
                     else {
