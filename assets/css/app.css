@@ -1,10 +1,10 @@
 .autocomplete-container {
     position: relative;
-    max-width: 250px;
+    /*max-width: 250px;*/
 
 }
 .result {
-    max-width: 250px;
+    max-width: 400px;
 }
 
 .autocomplete-input {
@@ -116,4 +116,17 @@ body > header .pagetitle {
 
 h3 {
     font-family: "ProximaNova", sans-serif;
+}
+
+.selectionPill {
+    border: 1px solid #333;
+    border-radius: 5px;
+    text-align: center;
+    margin-top: 5px;
+    display: inline-block;
+    min-width: 100px;
+}
+.pillOverlay {
+    display: block;
+    background: rgba(255,255,255, 0.3); /* lighten the color */
 }

@@ -21,14 +21,16 @@ angular.module('autocomplete', [] )
                 "id": "@id",
                 "placeholder": "@placeholder",
                 "dataField": "@datafield",  //typerää käyttää useaa päällekkäisen oloista kenttää, mieti voisiko niitä uudelleenkäyttää?   searchfield + datafield?
+                "multiSelect": "@",
+                "showBrowseButton": "@",
                 "selectedObject": "=selectedobject",
                 "dataSource": "=datasource",
                 "userPause": "@pause",
                 "searchFields": "=searchfields",  //array of search fields
                 "titleField": "@titlefield",  //TODO: rename to display field or resultField
                 "minLengthUser": "@minlength",
-                "clearOnSelection": '@',   //clear search query on selection event
-                "multiselect": '@',   //enable multiselection
+                "clearOnSelection": "@",   //clear search query on selection event
+                "multiselect": "@",   //enable multiselection
                 "onSelection":"&" //  The “&” operator allows you to invoke or evaluate an expression on the parent scope of whatever the directive is inside of.
 
             }, // http://stackoverflow.com/questions/14050195/what-is-the-difference-between-and-in-directive-scope
@@ -49,7 +51,7 @@ angular.module('autocomplete', [] )
                 //var browseBtn = element.find('button'); //change this to an id selector if we have more buttons
                 //scope.localData = true;
                 scope.pause = 500;
-                scope.minLength = 2;  //minlength internal
+                scope.minLength = 1;  //minlength internal
                 //scope.showDropdown = false;
 
                 setSelectedObject(null);
@@ -129,7 +131,21 @@ angular.module('autocomplete', [] )
                         scope.selectedObject(value);
                     }
                     else {
-                        scope.selectedObject = value;
+                        if (scope.multiSelect) {
+                            console.log("multiselect: ",value);
+                            if (!angular.isArray(scope.selectedObject) || value == null) {  //initialize or clear the result array
+                                scope.selectedObject = [];  //TODO: handle an existing value? is it possible?
+                            }
+
+                            //if (scope.selectedObject.length < 1) {}
+
+                            if (value)
+                                scope.selectedObject.push(value);
+
+                        }
+                        else {
+                            scope.selectedObject = value;
+                        }
                     }
 
                     /*

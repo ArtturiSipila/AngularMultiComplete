@@ -1,7 +1,6 @@
-
 <div class="row collapse {{mynamespace}}-container" style="max-width: 400px;">
     <label>Type to search</label>
-    <div class="small-9 columns">
+    <div ng-class="{'small-9': showBrowseButton, 'small-12': !showBrowseButton}" class="columns">
         <input id="{{id}}_value" style="margin-bottom: 0" ng-model="queryString" type="text" placeholder="{{placeholder}}" class="{{inputClass}} {{mynamespace}}-input" onmouseup="this.select();" ng-focus="resetHideResults()" ng-blur="hideResults()"/>
 
         <div id="{{id}}_dropdown" class="{{mynamespace}}-dropdown" ng-if="showDropdown" >
@@ -22,9 +21,14 @@
         </div>
 
     </div>
-    <div class="small-3 columns">
+    <div class="small-3 columns" ng-show="showBrowseButton">
         <button ng-click="browse()" class="autocomplete-browse postfix">Browse</button>
     </div>
 
+    <!--
+    <div class="small-3 columns">
+        <button ng-click="go()" class="autocomplete-browse postfix">Go</button>
+    </div>
+    -->
 </div>
 </div>

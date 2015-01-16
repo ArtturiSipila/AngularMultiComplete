@@ -6,17 +6,12 @@
     <!--
     <meta name='viewport' content='width=device-width,initial-scale=1'>
     -->
-
-
     <link rel="stylesheet" href="bower_components/foundation/css/foundation.css"/>
     <link rel="stylesheet" href="assets/css/app.css"/>
-
-
 </head>
 <body ng-app="testapp">
 <header class="alt-bg-color">
     <div class="row fullWidth" style="height: 165px;">
-
         <div class="columns medium-3" style="height: 165px; text-align: center; background: #369a47; padding-top: 15px;">
             <img src="assets/images/telescope_white.svg" style="width:130px; margin-left: 100px;">
         </div>
@@ -41,18 +36,19 @@
 
 <div class="row fullWidth">
     <div class="medium-9 medium-offset-3 columns" ng-controller="TestController" style="margin-top: 15px;">
+        TODO: select datasource - local or remote
         <h3>The list of colors</h3>
 
         <ul style="list-style: none;">
             <li ng-repeat="color in colors">{{color.color}}</li>
         </ul>
         <br/>
-        <br/>
-        <h3>1. Basic autocomplete:</h3>
         <!--
-        <autocomplete id="autocomplete" ng-model="selectedItem" selectedobject="selectedItem" dataSource="colors" searchFields="['color']" titlefield="color" placeholder="Search colors" ></autocomplete>
+        TODO: lisää ne parametrit jotka vaikuttavat, esim.  'multi-select=true' (esim. code blockkiin)
         -->
-        <!--ng-model="selectedItem"-->
+        <br/>
+        <br/>
+        <h3>1. Basic autocompletion:</h3>
         <autocomplete id="autocomplete"  selectedobject="selectedItem" dataSource="colors" searchFields="['color']" titlefield="color" placeholder="Search colors" ></autocomplete>
         <div class="result">
             <div ng-show="selectedItem" ng-style="{ 'background': selectedItem.originalObject.value}">
@@ -61,14 +57,17 @@
         </div>
         <BR/>
 
-
-        <h3>2. Clear search field on selection</h3>
+        <h3>2. Clear the search field on selection</h3>
         <autocomplete id="autocomplete" ng-model="selectedItem" selectedobject="selectedItem2" dataSource="colors" searchFields="['color']" titlefield="color" placeholder="Search colors" clear-on-selection="true" ></autocomplete>
         <div class="result">
             <div ng-show="selectedItem2" ng-style="{ 'background': selectedItem2.originalObject.value}">
                 You selected <span class="bold">{{selectedItem2.originalObject.color}}</span>
             </div>
         </div>
+
+        <!--
+        <pre><code class="language-html"><div class="code-container"><span class="tag">&lt;<span class="title">p</span>&gt;</span>For example, to close your browser hit <span class="tag">&lt;<span class="title">kbd</span>&gt;</span>Cmd<span class="tag">&lt;/<span class="title">kbd</span>&gt;</span> + <span class="tag">&lt;<span class="title">kbd</span>&gt;</span>Q<span class="tag">&lt;/<span class="title">kbd</span>&gt;</span><span class="tag">&lt;/<span class="title">p</span>&gt;</span></div></code></pre>
+        -->
         <BR/>
 
         <h3>3. Model as a callback function</h3>
@@ -80,7 +79,7 @@
         </div>
         <BR/>
 
-        <h3>4. Separate callback function</h3>
+        <h3>4. A Separate callback function</h3>
         <autocomplete id="autocomplete" ng-model="selectedItem" selectedobject="selectedItem4" on-selection="example4Callback(item)" dataSource="colors" searchFields="['color']" titlefield="color" placeholder="Search colors" clear-on-selection="true" ></autocomplete>
         <div class="result">
             <div ng-show="selectedItemFromCallBack" ng-style="{ 'background': selectedItem4.originalObject.value}">
@@ -89,6 +88,40 @@
         </div>
         <BR/>
 
+        <h3>5. Multiselect:</h3>
+        <autocomplete id="autocomplete"  selectedobject="selectedItems5" multi-select="true" dataSource="colors" searchFields="['color']" titlefield="color" placeholder="Search colors" ></autocomplete>
+        <div class="result">
+
+            <span ng-repeat="item5 in selectedItems5" ng-show="selectedItems5">
+                <span class="selectionPill" ng-style="{ 'background': item5.originalObject.value}">
+                    <span class="pillOverlay">
+                    {{item5.originalObject.color}}
+                        <span style="cursor: pointer; float: right; margin-left: 10px; margin-right: 10px;" ng-click="selectedItems5.splice($index, 1)">x</span>
+                    </span>
+                </span>
+            </span>
+        </div>
+        <BR/>
+
+        <h3>6. Browse values:</h3>
+        <!--<input ng-model="browseLimit"> Browse display limit-->
+        <autocomplete id="autocomplete"  selectedobject="selectedItem6" dataSource="colors" searchFields="['color']" titlefield="color" placeholder="Search colors" show-browse-button="true"></autocomplete>
+        <div class="result">
+            <div ng-show="selectedItem6" ng-style="{ 'background': selectedItem6.originalObject.value}">
+                You selected <span class="bold">{{selectedItem6.originalObject.color}}</span>
+            </div>
+        </div>
+        <BR/>
+
+        <h3>TODO: 7.  Dynamic browse <h6>(display the browse button if number of items in dataSource is less than browseLimit)</h6> </h3>
+        <!--<input ng-model="browseLimit"> Browse display limit-->
+        <autocomplete id="autocomplete"  selectedobject="selectedItem7" dataSource="colors" searchFields="['color']" titlefield="color" placeholder="Search colors" show-browse-button="true"></autocomplete>
+        <div class="result">
+            <div ng-show="selectedItem7" ng-style="{ 'background': selectedItem7.originalObject.value}">
+                You selected <span class="bold">{{selectedItem.originalObject7.color}}</span>
+            </div>
+        </div>
+        <BR/>
     </div>
 </div>
 
