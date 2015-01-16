@@ -267,7 +267,9 @@ angular.module('autocomplete', [] )
                 };
 
                 scope.browse = function () {
-                    scope.showDropdown = true;
+                    scope.showDropdown = !scope.showDropdown;  //toggle browse
+
+                    if (!scope.showDropdown) return;
 
                     if (scope.dataSource) {  //TODO if dataSource on tyyppiä array
 
