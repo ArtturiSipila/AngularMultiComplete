@@ -26,7 +26,7 @@ angular.module('autocomplete', [] )
                 "disabled":"=",
                 "selectedObject": "=selectedobject",
                 "dataSource": "=datasource",
-                "remote":"@",  // interprets dataSource as a remote URL
+                "remoteUrl":"@",  //overrides datasource if both present
                 "userPause": "@pause",
                 "searchFields": "=searchfields",  //array of search fields
                 "titleField": "@titlefield",  //TODO: rename to display field or resultField
@@ -163,7 +163,7 @@ angular.module('autocomplete', [] )
                     // Begin the search
 
                     if (searchQuery.length >= scope.minLength) {
-                        if (!scope.remote) {
+                        if (!scope.remoteUrl) {
                         //if (scope.dataSource) {  //TODO if dataSource on tyyppiä array
 
 
@@ -198,7 +198,8 @@ angular.module('autocomplete', [] )
                             scope.processResults(matches, searchQuery);
 
                         } else {
-                            $http.get(scope.dataSource + searchQuery, {}).
+                            $http.get(scope.remoteUrl + searchQuery, {}).
+                            //$http.jsonp(scope.remoteUrl + searchQuery, {}).
                                 success(function(responseData, status, headers, config) {
                                     scope.searching = false;
                                     scope.processResults(((scope.dataField) ? responseData[scope.dataField] : responseData ), searchQuery);

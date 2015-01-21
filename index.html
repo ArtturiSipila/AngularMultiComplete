@@ -153,7 +153,7 @@
 
         <h3>TODO 14: Remote call </h3>
 
-        <autocomplete selectedobject="selectedItem14" dataSource="http://api.duckduckgo.com/?format=json&pretty=1&q=" remote="true" minlength="2" pause="500" titlefield="color" placeholder="Search colors"></autocomplete>
+        <autocomplete selectedobject="selectedItem14" remote-url="//api.duckduckgo.com/?format=json&pretty=1&q=" minlength="2" pause="500" titlefield="color" placeholder="Search colors"></autocomplete>
         <div class="result">
             <div ng-show="selectedItem14" ng-style="{ 'background': selectedItem14.originalObject.value}">
                 You selected <span class="bold">{{selectedItem.originalObject14.color}}</span>
