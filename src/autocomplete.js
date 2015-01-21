@@ -23,8 +23,10 @@ angular.module('autocomplete', [] )
                 "dataField": "@datafield",  //typerää käyttää useaa päällekkäisen oloista kenttää, mieti voisiko niitä uudelleenkäyttää?   searchfield + datafield?
                 "multiSelect": "@",
                 "showBrowseButton": "@",
+                "disabled":"=",
                 "selectedObject": "=selectedobject",
                 "dataSource": "=datasource",
+                "remote":"@",  // interprets dataSource as a remote URL
                 "userPause": "@pause",
                 "searchFields": "=searchfields",  //array of search fields
                 "titleField": "@titlefield",  //TODO: rename to display field or resultField
@@ -32,7 +34,6 @@ angular.module('autocomplete', [] )
                 "clearOnSelection": "@",   //clear search query on selection event
                 "multiselect": "@",   //enable multiselection
                 "onSelection":"&" //  The “&” operator allows you to invoke or evaluate an expression on the parent scope of whatever the directive is inside of.
-
             }, // http://stackoverflow.com/questions/14050195/what-is-the-difference-between-and-in-directive-scope
             link: function(scope, element, attrs, ngModel) {
                 //if (!ngModel) return; // do nothing if no ng-model
@@ -50,12 +51,11 @@ angular.module('autocomplete', [] )
                 var input = element.find('input');
                 //var browseBtn = element.find('button'); //change this to an id selector if we have more buttons
                 //scope.localData = true;
-                scope.pause = 500;
+                scope.pause = 200;
                 scope.minLength = 1;  //minlength internal
                 //scope.showDropdown = false;
 
                 setSelectedObject(null);
-
                 /*
                 scope.$watch(function (){
                     return ngModel.$modelValue;
@@ -163,7 +163,12 @@ angular.module('autocomplete', [] )
                     // Begin the search
 
                     if (searchQuery.length >= scope.minLength) {
-                        if (scope.dataSource) {  //TODO if dataSource on tyyppiä array
+                        if (!scope.remote) {
+                        //if (scope.dataSource) {  //TODO if dataSource on tyyppiä array
+
+
+
+
 
                             //var searchFields = scope.searchFields.split(",");
                             var searchFields = null;
@@ -193,7 +198,7 @@ angular.module('autocomplete', [] )
                             scope.processResults(matches, searchQuery);
 
                         } else {
-                            $http.get(scope.url + searchQuery, {}).
+                            $http.get(scope.dataSource + searchQuery, {}).
                                 success(function(responseData, status, headers, config) {
                                     scope.searching = false;
                                     scope.processResults(((scope.dataField) ? responseData[scope.dataField] : responseData ), searchQuery);

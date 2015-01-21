@@ -37,6 +37,11 @@
 <div class="row fullWidth">
     <div class="medium-9 medium-offset-3 columns" ng-controller="TestController" style="margin-top: 15px;">
         TODO: select datasource - local or remote
+
+        <BR/>
+        TODO: select input kenttään suoraan, tai tohon mitä kirjoitetaan, pitää tehdä selväksi kun match on tehty!
+        TODO: hyvä sekoitus selectin ja autocompleten välillä, esim. toinen klikkaus inputtiin voisi avata browsen? eli tätä input muuttuu automaattisesti selectiksi jos kenttiä on vain n-määrä
+
         <h3>The list of colors</h3>
 
         <ul style="list-style: none;">
@@ -122,6 +127,40 @@
             </div>
         </div>
         <BR/>
+
+        <h3>8. Disabled state </h3>
+        <!--<input ng-model="browseLimit"> Browse display limit-->
+
+        <input id="example8checkbox" type="checkbox" ng-model="example8_disabled" name="disabled"> <label for="example8checkbox">disabled</label>
+        <autocomplete selectedobject="selectedItem8" dataSource="colors" disabled="example8_disabled" searchFields="['color']" titlefield="color" placeholder="Search colors"></autocomplete>
+        <div class="result">
+            <div ng-show="selectedItem8" ng-style="{ 'background': selectedItem8.originalObject.value}">
+                You selected <span class="bold">{{selectedItem.originalObject8.color}}</span>
+            </div>
+        </div>
+        <BR/>
+
+        <h3>TODO 9. Automatic scrollbar based on result limit </h3>
+
+
+        <h3>TODO 10. event handling for better "external" control emit/broadcast etc. "go", "clearYourself", "browse" with id or all </h3>
+
+        <h3>TODO 11. initial/prepopulated value </h3>
+
+        <h3>TODO 12. demonstrate callbacks: input val change, got results, etc. cleared</h3>
+
+        <h3>TODO 13. dynamically convert to a (multi)select-field if only a few items as it suits better</h3>
+
+        <h3>TODO 14: Remote call </h3>
+
+        <autocomplete selectedobject="selectedItem14" dataSource="http://api.duckduckgo.com/?format=json&pretty=1&q=" remote="true" minlength="2" pause="500" titlefield="color" placeholder="Search colors"></autocomplete>
+        <div class="result">
+            <div ng-show="selectedItem14" ng-style="{ 'background': selectedItem14.originalObject.value}">
+                You selected <span class="bold">{{selectedItem.originalObject14.color}}</span>
+            </div>
+        </div>
+        <BR/>
+
     </div>
 </div>
 

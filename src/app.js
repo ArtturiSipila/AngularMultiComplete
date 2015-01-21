@@ -52,5 +52,10 @@ test_app.controller('TestController', ['$scope',
                 console.log("Example 4 callback got this value: ",value);
                 alert("Got this value: "+value.title);
             };
+
+            //example 8:
+            $scope.example8_disabled = true;
+
+
         }
     ]);
