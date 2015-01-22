@@ -6,6 +6,10 @@
     <!--
     <meta name='viewport' content='width=device-width,initial-scale=1'>
     -->
+    <link rel="icon"
+          type="image/png"
+          href="assets/images/favicon.png">
+
     <link rel="stylesheet" href="bower_components/foundation/css/foundation.css"/>
     <link rel="stylesheet" href="assets/css/app.css"/>
 </head>
@@ -36,22 +40,32 @@
 
 <div class="row fullWidth">
     <div class="medium-9 medium-offset-3 columns" ng-controller="TestController" style="margin-top: 15px;">
-        TODO: select datasource - local or remote
 
         <BR/>
-        TODO: select input kenttään suoraan, tai tohon mitä kirjoitetaan, pitää tehdä selväksi kun match on tehty!
-        TODO: hyvä sekoitus selectin ja autocompleten välillä, esim. toinen klikkaus inputtiin voisi avata browsen? eli tätä input muuttuu automaattisesti selectiksi jos kenttiä on vain n-määrä
+        <strong>TODO</strong>: select input kenttään suoraan, tai tohon mitä kirjoitetaan, pitää tehdä selväksi kun match on tehty! <BR/>
+        <strong>TODO</strong>: hyvä sekoitus selectin ja autocompleten välillä, esim. toinen klikkaus inputtiin voisi avata browsen? eli tätä input muuttuu automaattisesti selectiksi jos kenttiä on vain n-määrä
 
-        <h3>The list of colors</h3>
+        <div class="row">
+            <div class="medium-12 columns">
+                <h2>Colors</h2>
 
-        <ul style="list-style: none;">
-            <li ng-repeat="color in colors">{{color.color}}</li>
-        </ul>
+                <ul style="list-style: none;">
+                    <li ng-repeat="color in colors">{{color | json}}</li>
+                </ul>
+            </div>
+            <div class="medium-12 columns">
+                <h2>Animals</h2>
+
+                <ul style="list-style: none;">
+                    <li ng-repeat="animal in animals">{{animal | json}}</li>
+                </ul>
+            </div>
+        </div>
         <br/>
         <!--
         TODO: lisää ne parametrit jotka vaikuttavat, esim.  'multi-select=true' (esim. code blockkiin)
         -->
-        <br/>
+        <h2>Examples</h2>
         <br/>
         <h3>1. Basic autocompletion:</h3>
         <autocomplete id="autocomplete"  selectedobject="selectedItem" dataSource="colors" searchFields="['color']" titlefield="color" placeholder="Search colors" ></autocomplete>
@@ -118,9 +132,13 @@
         </div>
         <BR/>
 
-        <h3>TODO: 7.  Dynamic browse <h6>(display the browse button if number of items in dataSource is less than browseLimit)</h6> </h3>
-        <!--<input ng-model="browseLimit"> Browse display limit-->
-        <autocomplete id="autocomplete"  selectedobject="selectedItem7" dataSource="colors" searchFields="['color']" titlefield="color" placeholder="Search colors" show-browse-button="true"></autocomplete>
+        <h3>7.  Dynamic browse <h6>(display the browse button if number of items in dataSource is less than browseLimit)</h6> </h3>
+        <button class="button small autocomplete-browse" ng-click="example7_useColorData()">Use color data</button>
+        <button class="button small autocomplete-browse" ng-click="example7_useAnimalData()">Use animal data</button>
+        <BR/>
+        <input ng-model="example7_browseLimit" size="2"> Browse display limit
+        
+        <autocomplete id="autocomplete"  selectedobject="selectedItem7" dataSource="example7_dataSource" browse-limit="{{example7_browseLimit}}" data-length="example7_dataLength" searchFields="example7_searchfields" titlefield="{{example7_titlefield}}" placeholder="{{example7_placeholder}}" dynamic-browse-button="true"></autocomplete>
         <div class="result">
             <div ng-show="selectedItem7" ng-style="{ 'background': selectedItem7.originalObject.value}">
                 You selected <span class="bold">{{selectedItem.originalObject7.color}}</span>
@@ -145,15 +163,19 @@
 
         <h3>TODO 10. event handling for better "external" control emit/broadcast etc. "go", "clearYourself", "browse" with id or all </h3>
 
-        <h3>TODO 11. initial/prepopulated value </h3>
+        <h3>11. initial/prepopulated value </h3>
+        <autocomplete selectedobject="selectedItem11" initial-value="re" dataSource="colors" searchFields="['color']" titlefield="color" placeholder="Search colors"></autocomplete>
+        <div class="result">
+            <div ng-show="selectedItem11" ng-style="{ 'background': selectedItem11.originalObject.value}">
+                You selected <span class="bold">{{selectedItem11.originalObject.color}}</span>
+            </div>
 
         <h3>TODO 12. demonstrate callbacks: input val change, got results, etc. cleared</h3>
 
         <h3>TODO 13. dynamically convert to a (multi)select-field if only a few items as it suits better</h3>
 
-        <h3>TODO 14: Remote call </h3>
-
-        <autocomplete selectedobject="selectedItem14" remote-url="//api.duckduckgo.com/?format=json&pretty=1&q=" minlength="2" pause="500" titlefield="color" placeholder="Search colors"></autocomplete>
+        <h3>14: Remote call </h3>
+        <autocomplete selectedobject="selectedItem14" remote-url="//api.duckduckgo.com/?format=json&callback=JSON_CALLBACK&pretty=1&q=" minlength="2" pause="500" titlefield="Result" placeholder="Search colors"></autocomplete>
         <div class="result">
             <div ng-show="selectedItem14" ng-style="{ 'background': selectedItem14.originalObject.value}">
                 You selected <span class="bold">{{selectedItem.originalObject14.color}}</span>
@@ -167,5 +189,6 @@
 <script type="text/javascript" src="bower_components/angular/angular.min.js"></script>
 <script type="text/javascript" src="src/app.js"></script>
 <script type="text/javascript" src="src/autocomplete.js"></script>
+    </div>
 </body>
 </html>

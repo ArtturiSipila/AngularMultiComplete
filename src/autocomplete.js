@@ -19,13 +19,19 @@ angular.module('autocomplete', [] )
             //require:"?ngModel",  //with ? we don't crash if ngModel is missing, this may or may not be a good thing
             scope: {
                 "id": "@id",
-                "placeholder": "@placeholder",
+                //"myindex": "=",
+                "dataSource": "=datasource",
+                "placeholder": "@",
                 "dataField": "@datafield",  //typerää käyttää useaa päällekkäisen oloista kenttää, mieti voisiko niitä uudelleenkäyttää?   searchfield + datafield?
                 "multiSelect": "@",
                 "showBrowseButton": "@",
+                "dynamicBrowseButton": "@",  //overwrites showBrowseButton if present
+                "initialValue":"@",
+                "browseLimit":"@",  //this is for dynamic browse button, it this value is given then browse button will show if dataLength is less than this
+                "dataLength":"@",   //if you can give number of (remote) items then we can use this information for browse button
                 "disabled":"=",
                 "selectedObject": "=selectedobject",
-                "dataSource": "=datasource",
+
                 "remoteUrl":"@",  //overrides datasource if both present
                 "userPause": "@pause",
                 "searchFields": "=searchfields",  //array of search fields
@@ -48,12 +54,34 @@ angular.module('autocomplete', [] )
                 scope.currentIndex = null;
                 scope.mynamespace = "autocomplete";
                 scope.matchClass = "highlight";
-                var input = element.find('input');
+
+                if (!scope.browseLimit) {
+                    console.log("no browse limit, set it to 5");
+                    scope.browseLimit = 5;
+                }
+                else {
+                    console.log("there is a browselimit: ", scope.browseLimit);
+                }
+
+                scope.$watch('dataSource', function (val){
+                    if (scope.dynamicBrowseButton) {
+                        console.log("WERWERWE");
+                        scope.showBrowseButton = (scope.browseLimit >= scope.dataSource.length);
+                        console.log("Show browsebutton: ", scope.showBrowseButton, " limit ", scope.browseLimit, " vs ",scope.dataSource.length);
+
+
+                    }
+
+                });
+
                 //var browseBtn = element.find('button'); //change this to an id selector if we have more buttons
                 //scope.localData = true;
                 scope.pause = 200;
                 scope.minLength = 1;  //minlength internal
                 //scope.showDropdown = false;
+
+                console.log("initial ", scope.initialValue);
+                if (scope.initialValue) scope.queryString = scope.initialValue;  // Set the possible initial value to query string
 
                 setSelectedObject(null);
                 /*
@@ -81,7 +109,11 @@ angular.module('autocomplete', [] )
                 }
 
                 scope.keyPressed = function(event) {
-                    if (!(event.which == KEY_UP_ARROW || event.which == KEY_DOWN_ARROW || event.which == KEY_ENTER)) {
+
+
+
+                    //if (!(event.which == KEY_UP_ARROW || event.which == KEY_DOWN_ARROW || event.which == KEY_ENTER)) {
+                    if (!(event.which == KEY_UP_ARROW || event.which == KEY_DOWN_ARROW) || (event.which == KEY_ENTER && !scope.results )) {
 
                         //scope.showDropdown = true;
 
@@ -166,10 +198,6 @@ angular.module('autocomplete', [] )
                         if (!scope.remoteUrl) {
                         //if (scope.dataSource) {  //TODO if dataSource on tyyppiä array
 
-
-
-
-
                             //var searchFields = scope.searchFields.split(",");
                             var searchFields = null;
                             if (typeof scope.searchFields !== 'undefined') {
@@ -180,7 +208,6 @@ angular.module('autocomplete', [] )
                             }
 
                             var matches = [];
-
 
                             for (var i = 0; i < scope.dataSource.length; i++) {
                                 var match = false;
@@ -198,11 +225,14 @@ angular.module('autocomplete', [] )
                             scope.processResults(matches, searchQuery);
 
                         } else {
-                            $http.get(scope.remoteUrl + searchQuery, {}).
-                            //$http.jsonp(scope.remoteUrl + searchQuery, {}).
+
+                            //$http.get(scope.remoteUrl + searchQuery, {}).
+                            $http.jsonp(scope.remoteUrl + searchQuery, {}).
                                 success(function(responseData, status, headers, config) {
+                                    console.log("success: ",responseData.RelatedTopics);
                                     scope.searching = false;
-                                    scope.processResults(((scope.dataField) ? responseData[scope.dataField] : responseData ), searchQuery);
+                                    //scope.processResults(((scope.dataField) ? responseData[scope.dataField] : responseData ), searchQuery);
+                                    scope.processResults(responseData.RelatedTopics, searchQuery);
                                 }).
                                 error(function(data, status, headers, config) {
 
@@ -225,7 +255,7 @@ angular.module('autocomplete', [] )
                         for (var i = 0; i < responseData.length; i++) {
                             // Get title variables
                             var titleCode = [];
-
+                            console.log("resp data",responseData[i]);
                             for (var t = 0; t < titleFields.length; t++) {
                                 titleCode.push(responseData[i][titleFields[t]]);
                             }
@@ -248,13 +278,16 @@ angular.module('autocomplete', [] )
                             var text = titleCode.join(' ');
 
 
-                            if (scope.matchClass) {
+                            if (scope.matchClass && !scope.remoteUrl) {   //Match highlight only in local data
                                 var re = new RegExp(str, 'i');
                                 var strPart = text.match(re)[0];
                                 text = $sce.trustAsHtml(text.replace(re, '<span class="' + scope.matchClass + '">' + strPart + '</span>'));
                                 //text = text.replace(re, '<span class="' + scope.matchClass + '">' + strPart + '</span>');
                             }
 
+                            if (scope.remoteUrl) {
+                                text = $sce.trustAsHtml(text);
+                            }
 
                             scope.results[scope.results.length] = {
                                 title: text,
@@ -284,7 +317,8 @@ angular.module('autocomplete', [] )
 
                     }
                     else { //TODO
-                        $http.get(scope.url + searchQuery, {}).
+                        //$http.get(scope.url + searchQuery, {}).
+                        $http.jsonp(scope.remoteUrl + searchQuery, {}).
                             success(function (responseData, status, headers, config) {
                                 scope.searching = false;
                                 scope.processResults(((scope.dataField) ? responseData[scope.dataField] : responseData ), " ");
@@ -338,8 +372,7 @@ angular.module('autocomplete', [] )
                 };
 
                 //Bind event listeners
-
-                input.on('keyup', scope.keyPressed);
+                element.find('input').on('keyup', scope.keyPressed);
                 //browseBtn.on('click', scope.browse);
 
                 element.on("keyup", function (event) {
@@ -367,17 +400,24 @@ angular.module('autocomplete', [] )
 
                     }
                     else if (event.which == KEY_ENTER) {
+                        console.log("Enter pressed, current index is ",scope.currentIndex);
                         if (scope.results && scope.currentIndex >= 0 && scope.currentIndex < scope.results.length) {
+                            console.log("Select result with enter");
                             scope.selectResult(scope.results[scope.currentIndex]);
                             scope.$apply();
                             event.preventDefault;
                             event.stopPropagation();
-                        } else {
+                        }
+
+                        /*else {
+                            console.log("clear results with enter");
                             scope.results = [];
                             scope.$apply();
                             event.preventDefault;
                             event.stopPropagation();
                         }
+                        */
+
 
                     }
                     else if (event.which == KEY_ESCAPE) {
