@@ -15,23 +15,25 @@ angular.module('autocomplete', [] )
 
         return {
             restrict: 'EA',
-            templateUrl: 'src/autocompleteTemplate.html',
+            templateUrl: function(element, attrs) {
+                return attrs.templateUrl || 'src/autocompleteTemplate.html';  //allow overwriting templateUrl with a user-given URL
+            },
             //require:"?ngModel",  //with ? we don't crash if ngModel is missing, this may or may not be a good thing
             scope: {
                 "id": "@id",
                 //"myindex": "=",
-                "dataSource": "=datasource",
+                "dataSource": "=datasource", //can be a value (array) or a function (if function it should provide a callback function first parameter and searchQuery as a second one)
                 "placeholder": "@",
                 "dataField": "@datafield",  //typerää käyttää useaa päällekkäisen oloista kenttää, mieti voisiko niitä uudelleenkäyttää?   searchfield + datafield?
                 "multiSelect": "@",
+                "removeSelected": "@", //remove selected value from dataSource,
                 "showBrowseButton": "@",
                 "dynamicBrowseButton": "@",  //overwrites showBrowseButton if present
                 "initialValue":"@",
                 "browseLimit":"@",  //this is for dynamic browse button, it this value is given then browse button will show if dataLength is less than this
                 "dataLength":"@",   //if you can give number of (remote) items then we can use this information for browse button
                 "disabled":"=",
-                "selectedObject": "=selectedobject",
-
+                "selectedObject": "=selectedobject",  //can be a value or a function
                 "remoteUrl":"@",  //overrides datasource if both present
                 "userPause": "@pause",
                 "searchFields": "=searchfields",  //array of search fields
@@ -44,13 +46,10 @@ angular.module('autocomplete', [] )
             link: function(scope, element, attrs, ngModel) {
                 //if (!ngModel) return; // do nothing if no ng-model
 
-                // Specify how UI should be updated
-                //ngModel.$render = function() {
-                 //   element.html($sce.getTrustedHtml(ngModel.$viewValue || ''));
-                //};
 
                 scope.searching = false;
-                scope.displayLimit = 8;
+
+                scope.displayLimit = 8;  //the hard limit for cutting display items (items seen in the dropdown menu)
                 scope.currentIndex = null;
                 scope.mynamespace = "autocomplete";
                 scope.matchClass = "highlight";
@@ -64,15 +63,21 @@ angular.module('autocomplete', [] )
                 }
 
                 scope.$watch('dataSource', function (val){
+                    scope.results = []; //clear results on dataSource change
+                    scope.showDropdown = false;
                     if (scope.dynamicBrowseButton) {
-                        console.log("WERWERWE");
                         scope.showBrowseButton = (scope.browseLimit >= scope.dataSource.length);
-                        console.log("Show browsebutton: ", scope.showBrowseButton, " limit ", scope.browseLimit, " vs ",scope.dataSource.length);
-
-
+                        //console.log("Show browsebutton: ", scope.showBrowseButton, " limit ", scope.browseLimit, " vs ",scope.dataSource.length);
                     }
-
                 });
+
+                scope.$watch('browseLimit', function (val){
+                    if (scope.dynamicBrowseButton) {
+                        scope.showBrowseButton = (scope.browseLimit >= scope.dataSource.length);
+                        //console.log("Show browsebutton: ", scope.showBrowseButton, " limit ", scope.browseLimit, " vs ",scope.dataSource.length);
+                    }
+                });
+
 
                 //var browseBtn = element.find('button'); //change this to an id selector if we have more buttons
                 //scope.localData = true;
@@ -82,6 +87,8 @@ angular.module('autocomplete', [] )
 
                 console.log("initial ", scope.initialValue);
                 if (scope.initialValue) scope.queryString = scope.initialValue;  // Set the possible initial value to query string
+
+                var dataSourceIsRemote = (typeof scope.dataSource === 'function'); //possibly remote
 
                 setSelectedObject(null);
                 /*
@@ -108,28 +115,30 @@ angular.module('autocomplete', [] )
                     scope.pause = scope.userPause;
                 }
 
-                scope.keyPressed = function(event) {
+                scope.keyPressedOnInputField = function(event) {
 
 
-
+                    //console.log("pressed ",event.which);
                     //if (!(event.which == KEY_UP_ARROW || event.which == KEY_DOWN_ARROW || event.which == KEY_ENTER)) {
                     if (!(event.which == KEY_UP_ARROW || event.which == KEY_DOWN_ARROW) || (event.which == KEY_ENTER && !scope.results )) {
-
+                            console.log("pressed ",event.which);
                         //scope.showDropdown = true;
 
                         if (!scope.queryString || scope.queryString == "") {
+                            console.log("no querystring");
                             scope.showDropdown = false;
                             scope.lastSearchTerm = null;
 
                         }
                         else if (isNewSearchNeeded(scope.queryString, scope.lastSearchTerm)) { //TODO: rename to : found in cache etc.
+                            console.log("new seach needed");
                             scope.lastSearchTerm = scope.queryString;
                             scope.showDropdown = true;
                             scope.currentIndex = -1;
                             scope.results = [];
 
-                            //cancel the curren timer if we keep typing?
                             if (scope.searchTimer) {
+                                //cancel the current timer if we keep typing?
                                 $timeout.cancel(scope.searchTimer);
                             }
 
@@ -145,14 +154,24 @@ angular.module('autocomplete', [] )
                                 scope.search(scope.queryString);
                             }, scope.pause);
                         }
+                        else {
+                            /*
+                            console.log("no need search needed, show dropdown");
+
+                            if (scope.results && scope.results.length > 0) {
+                                scope.showDropdown = !scope.showDropdown;  //toggle browse  or just set it?
+                            }
+                            */
+
+                        }
                     }
                     else {
+
                         event.preventDefault();
                     }
                 };
 
                 //from angucomplete
-
                 var isNewSearchNeeded = function(newTerm, oldTerm) {
                     return newTerm.length >= scope.minLength && newTerm != oldTerm
                 };
@@ -169,34 +188,31 @@ angular.module('autocomplete', [] )
                                 scope.selectedObject = [];  //TODO: handle an existing value? is it possible?
                             }
 
-                            //if (scope.selectedObject.length < 1) {}
-
                             if (value)
                                 scope.selectedObject.push(value);
-
                         }
                         else {
                             scope.selectedObject = value;
                         }
                     }
-
-                    /*
-                    if (value) {
-                        handleRequired(true);
-                    }
-                    else {
-                        handleRequired(false);
-                    }
-                    */
                 }
 
 
                 scope.search = function(searchQuery) {
                     // Begin the search
-
+                    //var tt = typeof scope.dataSource;
+                    //console.log("type of: ", tt);
                     if (searchQuery.length >= scope.minLength) {
-                        if (!scope.remoteUrl) {
-                        //if (scope.dataSource) {  //TODO if dataSource on tyyppiä array
+
+                        //function can be used for remote calls
+                        if (typeof scope.dataSource === 'function') {  //dataSource should provide a callback as first param and search query as second
+                             scope.dataSource(function(responseData) {
+                                 scope.processResults(responseData, searchQuery);  //TODO delete the hardcoded test value
+                                 scope.searching = false;
+                             }, searchQuery);
+                        }
+                        //local data
+                        else {
 
                             //var searchFields = scope.searchFields.split(",");
                             var searchFields = null;
@@ -224,20 +240,6 @@ angular.module('autocomplete', [] )
                             scope.searching = false;
                             scope.processResults(matches, searchQuery);
 
-                        } else {
-
-                            //$http.get(scope.remoteUrl + searchQuery, {}).
-                            $http.jsonp(scope.remoteUrl + searchQuery, {}).
-                                success(function(responseData, status, headers, config) {
-                                    console.log("success: ",responseData.RelatedTopics);
-                                    scope.searching = false;
-                                    //scope.processResults(((scope.dataField) ? responseData[scope.dataField] : responseData ), searchQuery);
-                                    scope.processResults(responseData.RelatedTopics, searchQuery);
-                                }).
-                                error(function(data, status, headers, config) {
-
-                                    console.error("http error");
-                                });
                         }
                     }
 
@@ -278,14 +280,15 @@ angular.module('autocomplete', [] )
                             var text = titleCode.join(' ');
 
 
-                            if (scope.matchClass && !scope.remoteUrl) {   //Match highlight only in local data
+                            if (scope.matchClass && !dataSourceIsRemote) {   //Match highlight only in local data
+
                                 var re = new RegExp(str, 'i');
                                 var strPart = text.match(re)[0];
                                 text = $sce.trustAsHtml(text.replace(re, '<span class="' + scope.matchClass + '">' + strPart + '</span>'));
                                 //text = text.replace(re, '<span class="' + scope.matchClass + '">' + strPart + '</span>');
                             }
 
-                            if (scope.remoteUrl) {
+                            if (dataSourceIsRemote) {
                                 text = $sce.trustAsHtml(text);
                             }
 
@@ -310,22 +313,18 @@ angular.module('autocomplete', [] )
 
                     if (!scope.showDropdown) return;
 
-                    if (scope.dataSource) {  //TODO if dataSource on tyyppiä array
 
-                        scope.searching = false;
-                        scope.processResults(  (scope.displayLimit < scope.dataSource.length) ? scope.dataSource.slice(0,scope.displayLimit) : scope.dataSource.slice(0,scope.dataSource.length)  , ".*");   // .* will match everything except new line and terminator
-
+                    //function can be used for remote calls
+                    if (typeof scope.dataSource === 'function') {  //dataSrouce should provide a callback
+                        scope.dataSource(function(responseData) {
+                            scope.processResults(responseData, searchQuery);
+                            scope.searching = false;
+                        });
                     }
-                    else { //TODO
-                        //$http.get(scope.url + searchQuery, {}).
-                        $http.jsonp(scope.remoteUrl + searchQuery, {}).
-                            success(function (responseData, status, headers, config) {
-                                scope.searching = false;
-                                scope.processResults(((scope.dataField) ? responseData[scope.dataField] : responseData ), " ");
-                            }).
-                            error(function (data, status, headers, config) {
-                                console.error("http error");
-                            });
+                    //local data
+                    else {
+                        scope.searching = false;
+                        scope.processResults((scope.displayLimit < scope.dataSource.length) ? scope.dataSource.slice(0, scope.displayLimit) : scope.dataSource.slice(0, scope.dataSource.length), ".*");   // .* will match everything except new line and terminator
                     }
             };
 
@@ -351,28 +350,30 @@ angular.module('autocomplete', [] )
                     //console.log("selectResult.title: ",result.title.$$unwrapTrustedValue());
                     //console.log("selectResult.title: ",result.originalObject.title);
                     if (scope.matchClass) {
-                        result.title = result.title.$$unwrapTrustedValue().toString().replace(/(<([^>]+)>)/ig, '');
+                        if (result.title)
+                            result.title = result.title.$$unwrapTrustedValue().toString().replace(/(<([^>]+)>)/ig, '');
                     }
                     //console.log("unwrapped title: ", result.title);
                     scope.queryString = scope.lastSearchTerm = result.title;
                     setSelectedObject(result);
-
                     scope.onSelection({item: result});
 
                     //console.log("Set view value to: ",result.originalObject.$$unwrapTrustedValue());
                     //ngModel.$setViewValue( result.originalObject.$$unwrapTrustedValue() );
 
                     scope.showDropdown = false;
-                    scope.results = [];
+                    //scope.results = [];  //do not clear the results, we can use them again, just hide the dropdown
 
                     if (scope.clearOnSelection) {
                         console.log("Clear on selection true");
                         scope.queryString = null;
                     }
+
+                    scope.currentIndex = -1;
                 };
 
                 //Bind event listeners
-                element.find('input').on('keyup', scope.keyPressed);
+                element.find('input').on('keyup', scope.keyPressedOnInputField);
                 //browseBtn.on('click', scope.browse);
 
                 element.on("keyup", function (event) {

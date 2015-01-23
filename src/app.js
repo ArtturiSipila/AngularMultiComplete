@@ -6,8 +6,8 @@ test_app.run(function($templateCache){
 });
 */
 
-test_app.controller('TestController', ['$scope',
-        function TestController($scope) {
+test_app.controller('TestController', ['$scope', '$http',
+        function TestController($scope, $http) {
            $scope.searchFieldsInData = ["color"];
            $scope.colors = [
                 {
@@ -37,8 +37,18 @@ test_app.controller('TestController', ['$scope',
                 {
                     color: "black",
                     value: "#000"
+                },
+                {
+                   color: "pink",
+                   value: "#FFC0CB"
+                },
+                {
+                   color: "slategrey",
+                   value: "#708090"
                 }
             ];
+
+
 
             $scope.animals = [
                 {
@@ -117,6 +127,22 @@ test_app.controller('TestController', ['$scope',
 
             //example 8:
             $scope.example8_disabled = true;
+
+
+            //example 14:
+            //$http.get(scope.remoteUrl + searchQuery, {}).
+            $scope.example14_getData = function(callback, searchQuery) {
+                $http.jsonp("//api.duckduckgo.com/?format=json&callback=JSON_CALLBACK&pretty=1&q=" + searchQuery, {}).
+                    success(function(responseData, status, headers, config) {
+                        callback(responseData.RelatedTopics);
+                        console.log("success: ",responseData.RelatedTopics);
+
+                    }).
+                    error(function(data, status, headers, config) {
+
+                        console.error("http error");
+                    });
+            }
 
 
         }

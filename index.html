@@ -42,6 +42,11 @@
     <div class="medium-9 medium-offset-3 columns" ng-controller="TestController" style="margin-top: 15px;">
 
         <BR/>
+        <h2>Feature highlights:</h2>
+        * Dynamic browse button makes the autocomplete feel like a standard html select component which is much more suitable when there are only a few items
+        <BR/>
+        <BR/>
+
         <strong>TODO</strong>: select input kenttään suoraan, tai tohon mitä kirjoitetaan, pitää tehdä selväksi kun match on tehty! <BR/>
         <strong>TODO</strong>: hyvä sekoitus selectin ja autocompleten välillä, esim. toinen klikkaus inputtiin voisi avata browsen? eli tätä input muuttuu automaattisesti selectiksi jos kenttiä on vain n-määrä
 
@@ -108,7 +113,8 @@
         <BR/>
 
         <h3>5. Multiselect:</h3>
-        <autocomplete id="autocomplete"  selectedobject="selectedItems5" multi-select="true" dataSource="colors" searchFields="['color']" titlefield="color" placeholder="Search colors" ></autocomplete>
+        todo: allow select same value many times?
+        <autocomplete id="autocomplete"  selectedobject="selectedItems5" multi-select="true" remove-selected="true" dataSource="colors" searchFields="['color']" titlefield="color" placeholder="Search colors"   ></autocomplete> <!-- clear-on-selection="true" -->
         <div class="result">
 
             <span ng-repeat="item5 in selectedItems5" ng-show="selectedItems5">
@@ -158,10 +164,24 @@
         </div>
         <BR/>
 
-        <h3>TODO 9. Automatic scrollbar based on result limit </h3>
+        <h3>9. Custom template</h3>
+        <script type="text/ng-template" id="some-template.html">
+            <div>this is my template which is not really working</div>
+        </script>
 
+        <autocomplete template-url="some-template.html"  selectedobject="selectedItem9" dataSource="colors" searchFields="['color']" titlefield="color" placeholder="Search colors" ></autocomplete>
+        <div class="result">
+            <div ng-show="selectedItem9" ng-style="{ 'background': selectedItem9.originalObject.value}">
+                You selected <span class="bold">{{selectedItem9.originalObject.color}}</span>
+            </div>
+        </div>
+        <BR/>
+        <BR/>
 
-        <h3>TODO 10. event handling for better "external" control emit/broadcast etc. "go", "clearYourself", "browse" with id or all </h3>
+        <h3>TODO 10. </h3>
+        event handling for better "external" control emit/broadcast etc. "go", "clearYourself", "browse" with id or all
+        <BR/>
+        <BR/>
 
         <h3>11. initial/prepopulated value </h3>
         <autocomplete selectedobject="selectedItem11" initial-value="re" dataSource="colors" searchFields="['color']" titlefield="color" placeholder="Search colors"></autocomplete>
@@ -170,15 +190,20 @@
                 You selected <span class="bold">{{selectedItem11.originalObject.color}}</span>
             </div>
 
-        <h3>TODO 12. demonstrate callbacks: input val change, got results, etc. cleared</h3>
-
-        <h3>TODO 13. dynamically convert to a (multi)select-field if only a few items as it suits better</h3>
-
+            <BR/>
+            <BR/>
+        <h3>TODO 12. </h3>
+            demonstrate callbacks: input val change, got results, etc. cleared
+            <BR/>
+            <BR/>
+        <h3>TODO 13. </h3>
+            <BR/>
+            <BR/>
         <h3>14: Remote call </h3>
-        <autocomplete selectedobject="selectedItem14" remote-url="//api.duckduckgo.com/?format=json&callback=JSON_CALLBACK&pretty=1&q=" minlength="2" pause="500" titlefield="Result" placeholder="Search colors"></autocomplete>
+        <autocomplete selectedobject="selectedItem14" dataSource="example14_getData" minlength="2" pause="500" titlefield="Result" placeholder="Search colors"></autocomplete>
         <div class="result">
-            <div ng-show="selectedItem14" ng-style="{ 'background': selectedItem14.originalObject.value}">
-                You selected <span class="bold">{{selectedItem.originalObject14.color}}</span>
+            <div ng-show="selectedItem14">
+                You selected <span class="bold">{{selectedItem14.originalObject.Result}}</span>
             </div>
         </div>
         <BR/>
