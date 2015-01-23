@@ -93,8 +93,9 @@ test_app.controller('TestController', ['$scope', '$http',
             };
 
             //example 4:
-            $scope.example4Callback = function(value) {
+            $scope.example4Callback = function(value, additionalParams) {
                 console.log("Example 4 callback got this value: ",value);
+                console.log("Example 4 callback got these additional params : ",additionalParams);
                 alert("Got this value: "+value.title);
             };
 
@@ -131,7 +132,10 @@ test_app.controller('TestController', ['$scope', '$http',
 
             //example 14:
             //$http.get(scope.remoteUrl + searchQuery, {}).
-            $scope.example14_getData = function(callback, searchQuery) {
+            $scope.example14_getData = function(callback, searchQuery, additional) {
+                console.log("Example14 got some additional params: ",additional);
+
+
                 $http.jsonp("//api.duckduckgo.com/?format=json&callback=JSON_CALLBACK&pretty=1&q=" + searchQuery, {}).
                     success(function(responseData, status, headers, config) {
                         callback(responseData.RelatedTopics);

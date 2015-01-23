@@ -23,6 +23,7 @@ angular.module('autocomplete', [] )
                 "id": "@id",
                 //"myindex": "=",
                 "dataSource": "=datasource", //can be a value (array) or a function (if function it should provide a callback function first parameter and searchQuery as a second one)
+                "additionalParams": "=", //additional parameter values for dataSource when dataSource is a function
                 "placeholder": "@",
                 "dataField": "@datafield",  //typerää käyttää useaa päällekkäisen oloista kenttää, mieti voisiko niitä uudelleenkäyttää?   searchfield + datafield?
                 "multiSelect": "@",
@@ -34,14 +35,16 @@ angular.module('autocomplete', [] )
                 "dataLength":"@",   //if you can give number of (remote) items then we can use this information for browse button
                 "disabled":"=",
                 "selectedObject": "=selectedobject",  //can be a value or a function
-                "remoteUrl":"@",  //overrides datasource if both present
+                //"remoteUrl":"@",  //overrides datasource if both present
                 "userPause": "@pause",
                 "searchFields": "=searchfields",  //array of search fields
                 "titleField": "@titlefield",  //TODO: rename to display field or resultField
                 "minLengthUser": "@minlength",
                 "clearOnSelection": "@",   //clear search query on selection event
                 "multiselect": "@",   //enable multiselection
-                "onSelection":"&" //  The “&” operator allows you to invoke or evaluate an expression on the parent scope of whatever the directive is inside of.
+                //"onSelection":"&", //  The “&” operator allows you to invoke or evaluate an expression on the parent scope of whatever the directive is inside of.
+                "onSelection":"=", //  The “&” operator allows you to invoke or evaluate an expression on the parent scope of whatever the directive is inside of.
+                "additionalCallbackParams":"="  //params added to onSelection etc. other callbacks
             }, // http://stackoverflow.com/questions/14050195/what-is-the-difference-between-and-in-directive-scope
             link: function(scope, element, attrs, ngModel) {
                 //if (!ngModel) return; // do nothing if no ng-model
@@ -206,10 +209,18 @@ angular.module('autocomplete', [] )
 
                         //function can be used for remote calls
                         if (typeof scope.dataSource === 'function') {  //dataSource should provide a callback as first param and search query as second
-                             scope.dataSource(function(responseData) {
-                                 scope.processResults(responseData, searchQuery);  //TODO delete the hardcoded test value
-                                 scope.searching = false;
-                             }, searchQuery);
+                            //if (scope.additionalParams)
+                                 scope.dataSource(function(responseData) {
+                                        scope.processResults(responseData, searchQuery);
+                                     scope.searching = false;
+                                 }, searchQuery, scope.additionalParams);
+                        /*
+                        else
+                                scope.dataSource(function(responseData) {
+                                    scope.processResults(responseData, searchQuery);  //TODO delete the hardcoded test value
+                                    scope.searching = false;
+                                }, searchQuery);
+                            */
                         }
                         //local data
                         else {
@@ -356,7 +367,9 @@ angular.module('autocomplete', [] )
                     //console.log("unwrapped title: ", result.title);
                     scope.queryString = scope.lastSearchTerm = result.title;
                     setSelectedObject(result);
-                    scope.onSelection({item: result});
+                    console.log("ADD ", scope.additionalCallbackParams);
+                    //scope.onSelection({item: result}, scope.additionalCallbackParams);
+                    scope.onSelection(result, scope.additionalCallbackParams);
 
                     //console.log("Set view value to: ",result.originalObject.$$unwrapTrustedValue());
                     //ngModel.$setViewValue( result.originalObject.$$unwrapTrustedValue() );

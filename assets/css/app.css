@@ -1,8 +1,9 @@
 .autocomplete-container {
+    /*display: inline-block;*/
     position: relative;
-    /*max-width: 250px;*/
-
+    max-width: 400px;
 }
+
 .result {
     max-width: 400px;
 }
@@ -21,31 +22,13 @@
 }
 
 .autocomplete-dropdown {
-    /*border-color: #ececec;*/
-
-
-
-    /*width: 250px;*7
-    padding: 6px;
-    cursor: pointer;
-    z-index: 9999;
-    /*position: absolute;*/
-
-    /*margin-top: -6px;*/
-
     overflow-y: auto;
     max-height: 200px;
-
     background-color: #ffffff;
-
     border: 1px solid rgb(189, 181, 181);
     border-top: none;
     border-radius: 2px;
     color: #414141;
-    /*
-    margin-right: 64px;
-    */
-
 }
 
 .autocomplete-searching {

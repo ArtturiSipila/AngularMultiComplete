@@ -104,7 +104,9 @@
         <BR/>
 
         <h3>4. A Separate callback function</h3>
-        <autocomplete id="autocomplete" ng-model="selectedItem" selectedobject="selectedItem4" on-selection="example4Callback(item)" dataSource="colors" searchFields="['color']" titlefield="color" placeholder="Search colors" clear-on-selection="true" ></autocomplete>
+        <!-- with &
+        <autocomplete id="autocomplete" ng-model="selectedItem" selectedobject="selectedItem4" on-selection="example4Callback(item, additional)" additional-callback-params="[{test: 'this'}]" dataSource="colors" searchFields="['color']" titlefield="color" placeholder="Search colors" clear-on-selection="true" ></autocomplete>-->
+        <autocomplete id="autocomplete" ng-model="selectedItem" selectedobject="selectedItem4" on-selection="example4Callback" additional-callback-params="[{test: 'this'}]" dataSource="colors" searchFields="['color']" titlefield="color" placeholder="Search colors" clear-on-selection="true" ></autocomplete>
         <div class="result">
             <div ng-show="selectedItemFromCallBack" ng-style="{ 'background': selectedItem4.originalObject.value}">
                 You selected <span class="bold">{{selectedItem4.originalObject.color}}</span>
@@ -113,7 +115,9 @@
         <BR/>
 
         <h3>5. Multiselect:</h3>
-        todo: allow select same value many times?
+        todo: allow select same value many times?<br/>
+        todo: all the possible values already selected<br/>
+        todo: select all<br/>
         <autocomplete id="autocomplete"  selectedobject="selectedItems5" multi-select="true" remove-selected="true" dataSource="colors" searchFields="['color']" titlefield="color" placeholder="Search colors"   ></autocomplete> <!-- clear-on-selection="true" -->
         <div class="result">
 
@@ -200,7 +204,7 @@
             <BR/>
             <BR/>
         <h3>14: Remote call </h3>
-        <autocomplete selectedobject="selectedItem14" dataSource="example14_getData" minlength="2" pause="500" titlefield="Result" placeholder="Search colors"></autocomplete>
+        <autocomplete selectedobject="selectedItem14" dataSource="example14_getData" additional-params="[{somevalue: 'yeah'}]" minlength="2" pause="500" titlefield="Result" placeholder="Search colors"></autocomplete>
         <div class="result">
             <div ng-show="selectedItem14">
                 You selected <span class="bold">{{selectedItem14.originalObject.Result}}</span>
