@@ -39,14 +39,17 @@ test_app.controller('TestController', ['$scope', '$http',
                     value: "#000"
                 },
                 {
-                   color: "pink",
-                   value: "#FFC0CB"
+                    color: "pink",
+                    value: "#FFC0CB"
                 },
                 {
-                   color: "slategrey",
-                   value: "#708090"
+                    color: "slategrey",
+                    value: "#708090"
                 }
             ];
+
+            $scope.colors_flat = ["red", "green", "blue", "cyan", "magenta", "yellow", "black", "pink", "slategrey"];
+
 
 
 

@@ -227,24 +227,37 @@ angular.module('autocomplete', [] )
 
                             //var searchFields = scope.searchFields.split(",");
                             var searchFields = null;
-                            if (typeof scope.searchFields !== 'undefined') {
-                                searchFields = scope.searchFields;
-                            }
-                            else {
-                                console.error("Autocomplete error: No search field defined");
-                            }
-
                             var matches = [];
 
-                            for (var i = 0; i < scope.dataSource.length; i++) {
-                                var match = false;
+                            //if searchFields defined
+                            if (typeof scope.searchFields !== 'undefined') {
+                                searchFields = scope.searchFields;
 
-                                for (var s = 0; s < searchFields.length; s++) {
-                                    match = match || (typeof scope.dataSource[i][searchFields[s]] === 'string' && typeof searchQuery === 'string' && scope.dataSource[i][searchFields[s]].toLowerCase().indexOf(searchQuery.toLowerCase()) >= 0);
+
+                                for (var i = 0; i < scope.dataSource.length; i++) {
+                                    var match = false;
+
+                                    for (var s = 0; s < searchFields.length; s++) {
+                                        match = match || (typeof scope.dataSource[i][searchFields[s]] === 'string' && typeof searchQuery === 'string' && scope.dataSource[i][searchFields[s]].toLowerCase().indexOf(searchQuery.toLowerCase()) >= 0);
+                                    }
+
+                                    if (match) {
+                                        matches[matches.length] = scope.dataSource[i];
+                                    }
                                 }
+                            }
+                            //if not searchFields defined, presume the source array is flat
+                            else {
+                                //console.error("Autocomplete error: No search field defined");
+                                for (var i = 0; i < scope.dataSource.length; i++) {
+                                    var match = false;
 
-                                if (match) {
-                                    matches[matches.length] = scope.dataSource[i];
+
+                                    match = match || (typeof scope.dataSource[i] === 'string' && typeof searchQuery === 'string' && scope.dataSource[i].toLowerCase().indexOf(searchQuery.toLowerCase()) >= 0);
+
+                                    if (match) {
+                                        matches[matches.length] = scope.dataSource[i];
+                                    }
                                 }
                             }
 
@@ -261,17 +274,29 @@ angular.module('autocomplete', [] )
                         scope.results = [];
 
                         var titleFields = [];
-                        if (scope.titleField && scope.titleField != "") {
+                        if (typeof scope.titleField !== 'undefined' && scope.titleField && scope.titleField != "") {
                             titleFields = scope.titleField.split(",");
+                        }
+                        else {
+                            console.log("titlefield not defined");
                         }
 
                         for (var i = 0; i < responseData.length; i++) {
                             // Get title variables
                             var titleCode = [];
-                            console.log("resp data",responseData[i]);
-                            for (var t = 0; t < titleFields.length; t++) {
-                                titleCode.push(responseData[i][titleFields[t]]);
+                            var text;
+                            //console.log("resp data",responseData[i]);
+                            if (typeof scope.titleField !== 'undefined') {
+                                for (var t = 0; t < titleFields.length; t++) {
+                                    titleCode.push(responseData[i][titleFields[t]]);
+                                    text = titleCode.join(' ');
+                                }
                             }
+                            else { //no titlefield defined
+                                text = responseData[i];
+                                //titleCode.push(responseData[i]);
+                            }
+                            //var text = titleCode.join(' ');
 
                             var description = "";
                             if (scope.descriptionField) {
@@ -288,8 +313,8 @@ angular.module('autocomplete', [] )
                                 image = imageUri + responseData[i][scope.imageField];
                             }
 
-                            var text = titleCode.join(' ');
 
+                        //console.log("TEXT: ",text);
 
                             if (scope.matchClass && !dataSourceIsRemote) {   //Match highlight only in local data
 
@@ -298,10 +323,12 @@ angular.module('autocomplete', [] )
                                 text = $sce.trustAsHtml(text.replace(re, '<span class="' + scope.matchClass + '">' + strPart + '</span>'));
                                 //text = text.replace(re, '<span class="' + scope.matchClass + '">' + strPart + '</span>');
                             }
+                            else {
 
-                            if (dataSourceIsRemote) {
+//                            if (dataSourceIsRemote) {
                                 text = $sce.trustAsHtml(text);
                             }
+                            //console.log("text: ",text);
 
                             scope.results[scope.results.length] = {
                                 title: text,
@@ -368,8 +395,9 @@ angular.module('autocomplete', [] )
                     scope.queryString = scope.lastSearchTerm = result.title;
                     setSelectedObject(result);
                     console.log("ADD ", scope.additionalCallbackParams);
-                    //scope.onSelection({item: result}, scope.additionalCallbackParams);
-                    scope.onSelection(result, scope.additionalCallbackParams);
+
+                    if (scope.onSelection)  //TODO: override this with an empty function at the beginning if it isn't defined
+                        scope.onSelection(result, scope.additionalCallbackParams);
 
                     //console.log("Set view value to: ",result.originalObject.$$unwrapTrustedValue());
                     //ngModel.$setViewValue( result.originalObject.$$unwrapTrustedValue() );

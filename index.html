@@ -60,6 +60,13 @@
                 </ul>
             </div>
             <div class="medium-12 columns">
+                <h2>Colors in a flat array</h2>
+
+                <ul style="list-style: none;">
+                    <li ng-repeat="color in colors_flat">{{color | json}}</li>
+                </ul>
+            </div>
+            <div class="medium-12 columns">
                 <h2>Animals</h2>
 
                 <ul style="list-style: none;">
@@ -201,9 +208,16 @@
             demonstrate callbacks: input val change, got results, etc. cleared
             <BR/>
             <BR/>
-        <h3>TODO 13. </h3>
-            <BR/>
-            <BR/>
+        <h3>13. Flat array </h3>
+        <autocomplete selectedobject="selectedItem13" dataSource="colors_flat" placeholder="Search colors" ></autocomplete>
+        <div class="result">
+            <div ng-show="selectedItem13" ng-style="{ 'background': selectedItem13.originalObject}">
+                You selected <span class="bold">{{selectedItem13.originalObject}}</span>
+            </div>
+        </div>
+        <BR/>
+        <BR/>
+
         <h3>14: Remote call </h3>
         <autocomplete selectedobject="selectedItem14" dataSource="example14_getData" additional-params="[{somevalue: 'yeah'}]" minlength="2" pause="500" titlefield="Result" placeholder="Search colors"></autocomplete>
         <div class="result">
