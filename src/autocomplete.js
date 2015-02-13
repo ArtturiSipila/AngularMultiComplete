@@ -57,6 +57,11 @@ angular.module('autocomplete', [] )
                 scope.mynamespace = "autocomplete";
                 scope.matchClass = "highlight";
 
+                var mousedownOn = null;
+                element.on('mousedown', function(event) {
+                    mousedownOn = event.target.id;
+                });
+
                 if (!scope.browseLimit) {
                     console.log("no browse limit, set it to 5");
                     scope.browseLimit = 5;
@@ -369,12 +374,20 @@ angular.module('autocomplete', [] )
 
 
                 scope.hideResults = function() {
-                    scope.hideTimer = $timeout(function() {
-                        scope.showDropdown = false;
-                    }, scope.pause);
+                    console.log("HideResults");
+                    // don't hide the results if for example clicking on a scrollbar or some other element inside the autocomplete component
+                    if (mousedownOn === scope.id + '_dropdown') {
+                        mousedownOn = null;
+                    }
+                    else {
+                        scope.hideTimer = $timeout(function () {
+                            scope.showDropdown = false;
+                        }, scope.pause);
+                    }
                 };
 
                 scope.resetHideResults = function() {
+                    console.log("resetHideResults");
                     if(scope.hideTimer) {
                         $timeout.cancel(scope.hideTimer);
                     }
@@ -384,7 +397,8 @@ angular.module('autocomplete', [] )
                     scope.currentIndex = index;
                 };
 
-                scope.selectResult = function(result) {
+                scope.selectResult = function(result, $event) {
+                    console.log("$event: ", $event);
                     console.log("selectResult: ",result);
                     //console.log("selectResult.title: ",result.title.$$unwrapTrustedValue());
                     //console.log("selectResult.title: ",result.originalObject.title);
