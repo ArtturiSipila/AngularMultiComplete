@@ -288,6 +288,7 @@ angular.module('autocomplete', [] )
                             //console.log("resp data",responseData[i]);
                             if (typeof scope.titleField !== 'undefined') {
                                 for (var t = 0; t < titleFields.length; t++) {
+                                    //if (!responseData[i][titleFields[t]])  data has not given titlefield //TODO: error message
                                     titleCode.push(responseData[i][titleFields[t]]);
                                     text = titleCode.join(' ');
                                 }
