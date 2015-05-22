@@ -164,6 +164,20 @@
         </div>
         <BR/>
 
+        <h3>7.5  Dynamic remote browse <h6>(display the browse button if number of items in dataSource is less than browseLimit)</h6> </h3>
+        <button class="button small autocomplete-browse" ng-click="example7_useColorData()">Use color data</button>
+        <button class="button small autocomplete-browse" ng-click="example7_useAnimalData()">Use animal data</button>
+        <BR/>
+        <input ng-model="example75_browseLimit" size="2"> Browse display limit
+
+        <autocomplete id="autocomplete"  selectedobject="selectedItem7" dataSource="example7_dataSource" browse-limit="{{example75_browseLimit}}" data-length="example7_dataLength" searchFields="example75_searchfields" titlefield="{{example75_titlefield}}" placeholder="{{example75_placeholder}}" dynamic-browse-button="true"></autocomplete>
+        <div class="result">
+            <div ng-show="selectedItem75" ng-style="{ 'background': selectedItem75.originalObject.value}">
+                You selected <span class="bold">{{selectedItem.originalObject75.color}}</span>
+            </div>
+        </div>
+        <BR/>
+
         <h3>8. Disabled state </h3>
         <!--<input ng-model="browseLimit"> Browse display limit-->
 

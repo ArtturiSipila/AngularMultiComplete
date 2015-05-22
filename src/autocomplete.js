@@ -20,7 +20,7 @@ angular.module('autocomplete', [] )
             },
             //require:"?ngModel",  //with ? we don't crash if ngModel is missing, this may or may not be a good thing
             scope: {
-                "id": "@id",
+                "id": "@id",  //not obligatory but recommended to everything work corretly
                 //"myindex": "=",
                 "dataSource": "=datasource", //can be a value (array) or a function (if function it should provide a callback function first parameter and searchQuery as a second one)
                 "additionalParams": "=", //additional parameter values for dataSource when dataSource is a function
@@ -59,7 +59,9 @@ angular.module('autocomplete', [] )
 
                 var mousedownOn = null;
                 element.on('mousedown', function(event) {
-                    mousedownOn = event.target.id;
+                    console.log("event.target: ",event.target);
+                    console.log("element: ",element);
+                    mousedownOn = event.target.id;  //TODO: tekeekö tämä id:stä pakollisen?
                 });
 
                 if (!scope.browseLimit) {
@@ -74,14 +76,14 @@ angular.module('autocomplete', [] )
                     scope.results = []; //clear results on dataSource change
                     scope.showDropdown = false;
                     if (scope.dynamicBrowseButton) {
-                        scope.showBrowseButton = (scope.browseLimit >= scope.dataSource.length);
+                        scope.showBrowseButton = (scope.browseLimit >= scope.dataSource.length && scope.dataSource.length > 0);
                         //console.log("Show browsebutton: ", scope.showBrowseButton, " limit ", scope.browseLimit, " vs ",scope.dataSource.length);
                     }
                 });
 
                 scope.$watch('browseLimit', function (val){
                     if (scope.dynamicBrowseButton) {
-                        scope.showBrowseButton = (scope.browseLimit >= scope.dataSource.length);
+                        scope.showBrowseButton = (scope.browseLimit >= scope.dataSource.length && scope.dataSource.length > 0);
                         //console.log("Show browsebutton: ", scope.showBrowseButton, " limit ", scope.browseLimit, " vs ",scope.dataSource.length);
                     }
                 });
