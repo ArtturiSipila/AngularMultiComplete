@@ -28,7 +28,7 @@ angular.module('autocomplete', [] )
                 "dataField": "@datafield",  //typerää käyttää useaa päällekkäisen oloista kenttää, mieti voisiko niitä uudelleenkäyttää?   searchfield + datafield?
                 "multiSelect": "@",
                 "removeSelected": "@", //remove selected value from dataSource,
-                "showBrowseButton": "@",
+                "showBrowseButton": "=",
                 "dynamicBrowseButton": "@",  //overwrites showBrowseButton if present
                 "initialValue":"@",
                 "browseLimit":"@",  //this is for dynamic browse button, it this value is given then browse button will show if dataLength is less than this

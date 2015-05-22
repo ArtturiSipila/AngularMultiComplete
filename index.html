@@ -142,7 +142,8 @@
 
         <h3>6. Browse values:</h3>
         <!--<input ng-model="browseLimit"> Browse display limit-->
-        <autocomplete id="autocomplete"  selectedobject="selectedItem6" dataSource="colors" searchFields="['color']" titlefield="color" placeholder="Search colors" show-browse-button="true"></autocomplete>
+        <input ng-model="example6_showBrowse"  type="checkbox"  size="2"> Show browse button
+        <autocomplete id="autocomplete"  selectedobject="selectedItem6" dataSource="colors" searchFields="['color']" titlefield="color" placeholder="Search colors" show-browse-button="example6_showBrowse"></autocomplete>
         <div class="result">
             <div ng-show="selectedItem6" ng-style="{ 'background': selectedItem6.originalObject.value}">
                 You selected <span class="bold">{{selectedItem6.originalObject.color}}</span>

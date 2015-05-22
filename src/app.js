@@ -102,6 +102,8 @@ test_app.controller('TestController', ['$scope', '$http',
                 alert("Got this value: "+value.title);
             };
 
+
+            $scope.example6_showBrowse = true;
             //example 7:
             $scope.example7_browseLimit = 5;
             $scope.example7_dataLength = 0;
