@@ -29,6 +29,7 @@ angular.module('autocomplete', [] )
                 "multiSelect": "@",
                 "removeSelected": "@", //remove selected value from dataSource,
                 "showBrowseButton": "=?",
+                "showSelectallButton":"=?",
                 "dynamicBrowseButton": "@",  //overwrites showBrowseButton if present
                 "initialValue":"@",
                 "browseLimit":"@",  //this is for dynamic browse button, it this value is given then browse button will show if dataLength is less than this
@@ -63,6 +64,14 @@ angular.module('autocomplete', [] )
                     console.log("element: ",element);
                     mousedownOn = event.target.id;  //TODO: tekeekö tämä id:stä pakollisen?
                 });
+
+                if (!scope.showBrowseButton) {
+                    showBrowseButton = false;
+                }
+
+                if (!scope.showSelectallButton) {
+                    scope.showSelectallButton = false;
+                }
 
                 if (!scope.browseLimit) {
                     console.log("no browse limit, set it to 5");
