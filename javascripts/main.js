@@ -175,7 +175,7 @@ angular.module('autocomplete', [] )
         return {
             restrict: 'EA',
             templateUrl: function(element, attrs) {
-                return attrs.templateUrl || 'src/autocompleteTemplate.html';  //allow overwriting templateUrl with a user-given URL
+                return attrs.templateUrl || 'autocompleteTemplate.html';  //allow overwriting templateUrl with a user-given URL
             },
             scope: {
                 "id": "@id",  //not obligatory but recommended to everything work correctly
