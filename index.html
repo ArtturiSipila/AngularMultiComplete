@@ -190,6 +190,7 @@
         </div>
         <BR/>
 
+        <!--
         <h3>7.5  Dynamic remote browse <h6>(display the browse button if number of items in dataSource is less than browseLimit)</h6> </h3>
         <button class="button small autocomplete-browse" ng-click="example7_useColorData()">Use color data</button>
         <button class="button small autocomplete-browse" ng-click="example7_useAnimalData()">Use animal data</button>
@@ -203,7 +204,8 @@
             </div>
         </div>
         <BR/>
-
+        --> 
+        
         <h3>8. Disabled state </h3>
         <!--<input ng-model="browseLimit"> Browse display limit-->
 
@@ -218,7 +220,40 @@
 
         <h3>9. Custom template</h3>
         <script type="text/ng-template" id="some-template.html">
-            <div>this is my template which is not really working</div>
+            <div class="row collapse {{mynamespace}}-container" style="max-width: 400px;">
+    <label>Type to search</label>
+
+    <div ng-class="{'small-9': showBrowseButton, 'small-12': !showBrowseButton}" class="columns">
+        <input id="{{id}}_value" style="margin-bottom: 0" ng-disabled="disabled" ng-model="queryString" type="text"
+               placeholder="{{placeholder}}" class="{{inputClass}} {{mynamespace}}-input" onmouseup="this.select();"
+               ng-focus="resetHideResults()" ng-blur="hideResults()"/>
+
+        <div id="{{id}}_dropdown" class="{{mynamespace}}-dropdown" ng-if="showDropdown">
+            <div class="{{mynamespace}}-searching" ng-show="searching">Searching...</div>
+            <div class="{{mynamespace}}-searching" ng-show="!searching && (!results || results.length == 0)">No results
+                found
+            </div>
+            <div class="{{mynamespace}}-row" ng-repeat="result in results" ng-click="selectResult(result, $event)"
+                 ng-mouseover="hoverRow()" ng-class="{'selected-row': $index == currentIndex}">
+                <div ng-if="imageField" class="autocomplete-image-holder">
+                    <img ng-if="result.image && result.image != ''" ng-src="{{result.image}}"
+                         class="{{mynamespace}}-image"/>
+
+                    <div ng-if="!result.image && result.image != ''" class="{{mynamespace}}e-image-default"></div>
+                </div>
+                <div class="{{mynamespace}}-title" ng-if="matchClass" ng-bind-html="result.title"></div>
+                <div class="{{mynamespace}}-title" ng-if="!matchClass">{{ result.title }}</div>
+                <div ng-if="result.description && result.description != ''" class="{{mynamespace}}-description">
+                    {{result.description}}
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="small-3 columns" ng-show="showBrowseButton">
+        <button ng-click="browse()" class="autocomplete-browse postfix">Browse</button>
+    </div>
+</div>
         </script>
 
         <autocomplete template-url="some-template.html"  selectedobject="selectedItem9" dataSource="colors" searchFields="['color']" titlefield="color" placeholder="Search colors" ></autocomplete>
