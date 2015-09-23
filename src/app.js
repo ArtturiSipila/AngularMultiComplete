@@ -1,6 +1,7 @@
 var test_app = angular.module('testapp', ["autocomplete"]);
 
 /*
+use templateCache if you feel like
 test_app.run(function($templateCache){
     $templateCache.put("autocomplete.html", '<div></div>')
 });

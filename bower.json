@@ -1,0 +1,23 @@
+{
+  "name": "AngularMultiComplete",
+  "version": "0.0.0",
+  "homepage": "http://artturisipila.github.io/AngularMultiComplete/",
+  "authors": [
+    "Artturi Sipilä"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.4.6",
+    "jquery": "~2.1.4"
+  },
+  "devDependencies": {
+    "angular-mocks": "~1.4.6"
+  }
+}

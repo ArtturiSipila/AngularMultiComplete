@@ -1,7 +1,6 @@
 angular.module('autocomplete', [] )
     .directive('autocomplete', function ($parse, $http, $sce, $timeout) {
 
-
         // keyboard mappings
         var KEY_BACKSPACE   =  8;
         var KEY_TAB         =  9;
@@ -18,9 +17,8 @@ angular.module('autocomplete', [] )
             templateUrl: function(element, attrs) {
                 return attrs.templateUrl || 'src/autocompleteTemplate.html';  //allow overwriting templateUrl with a user-given URL
             },
-            //require:"?ngModel",  //with ? we don't crash if ngModel is missing, this may or may not be a good thing
             scope: {
-                "id": "@id",  //not obligatory but recommended to everything work corretly
+                "id": "@id",  //not obligatory but recommended to everything work correctly
                 //"myindex": "=",
                 "dataSource": "=datasource", //can be a value (array) or a function (if function it should provide a callback function first parameter and searchQuery as a second one)
                 "additionalParams": "=", //additional parameter values for dataSource when dataSource is a function
