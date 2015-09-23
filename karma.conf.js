@@ -22,7 +22,7 @@ module.exports = function(config) {
       'src/app.js',
       'src/autocompleteTemplate.html',
       'src/autocomplete.js',
-      'test/*Spec.js'
+      'test/*spec.js'
     ],
 
 
