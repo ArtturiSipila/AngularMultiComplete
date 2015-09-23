@@ -221,10 +221,10 @@
         <h3>9. Custom template</h3>
         <script type="text/ng-template" id="some-template.html">
             <div class="row collapse {{mynamespace}}-container" style="max-width: 400px;">
-    <label>Type to search</label>
+    <label>Type to search, by the way this is my custom template</label>
 
     <div ng-class="{'small-9': showBrowseButton, 'small-12': !showBrowseButton}" class="columns">
-    MY CUSTOM TEMPLATE
+    
         <input id="{{id}}_value" style="margin-bottom: 0" ng-disabled="disabled" ng-model="queryString" type="text"
                placeholder="{{placeholder}}" class="{{inputClass}} {{mynamespace}}-input" onmouseup="this.select();"
                ng-focus="resetHideResults()" ng-blur="hideResults()"/>
@@ -266,12 +266,14 @@
         <BR/>
         <BR/>
 
+        <!--
         <h3>TODO 10. </h3>
         event handling for better "external" control emit/broadcast etc. "go", "clearYourself", "browse" with id or all
         <BR/>
         <BR/>
+        -->
 
-        <h3>11. initial/prepopulated value </h3>
+        <h3>10. initial/prepopulated value </h3>
         <autocomplete selectedobject="selectedItem11" initial-value="re" dataSource="colors" searchFields="['color']" titlefield="color" placeholder="Search colors"></autocomplete>
         <div class="result">
             <div ng-show="selectedItem11" ng-style="{ 'background': selectedItem11.originalObject.value}">
@@ -280,11 +282,13 @@
 
             <BR/>
             <BR/>
+            <!--
         <h3>TODO 12. </h3>
             demonstrate callbacks: input val change, got results, etc. cleared
             <BR/>
             <BR/>
-        <h3>13. Flat array </h3>
+            -->
+        <h3>11. Flat array </h3>
         <autocomplete selectedobject="selectedItem13" dataSource="colors_flat" placeholder="Search colors" ></autocomplete>
         <div class="result">
             <div ng-show="selectedItem13" ng-style="{ 'background': selectedItem13.originalObject}">
@@ -294,7 +298,7 @@
         <BR/>
         <BR/>
 
-        <h3>14: Remote call </h3>
+        <h3>12: Remote call </h3>
         <autocomplete selectedobject="selectedItem14" dataSource="example14_getData" additional-params="[{somevalue: 'yeah'}]" minlength="2" pause="500" titlefield="Result" placeholder="Search colors"></autocomplete>
         <div class="result">
             <div ng-show="selectedItem14">
